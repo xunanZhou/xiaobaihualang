@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的 - AI画廊</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://tdesign.tencent.com/miniprogram/dist/tdesign.css">
+</head>
+<body class="bg-gray-50 h-screen overflow-hidden">
+    <div class="flex flex-col h-full">
+        <!-- 顶部标题栏 -->
+        <div class="bg-white shadow-sm px-4 py-3 flex items-center justify-center">
+            <h1 class="text-lg font-semibold text-gray-800">我的</h1>
+        </div>
+
+        <!-- 主内容区域 -->
+        <div class="flex-1 overflow-y-auto">
+            <!-- 已登录状态 -->
+            <div id="logged-in" class="block">
+                <!-- 用户信息卡片 -->
+                <div class="bg-white mx-4 mt-4 rounded-lg shadow-sm p-4">
+                    <div class="flex items-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full mr-4 flex items-center justify-center">
+                            <span class="text-white text-lg font-semibold">张</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">张小艺</h3>
+                            <p class="text-sm text-gray-500">创作了 12 幅作品</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 个人画廊 -->
+                <div class="px-4 mt-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">个人画廊</h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- 作品卡片 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <div class="w-full h-32 bg-gradient-to-br from-purple-400 to-pink-400"></div>
+                            <div class="p-2">
+                                <p class="text-xs text-gray-600 line-clamp-2">可爱的小猫咪在花园里玩耍</p>
+                                <p class="text-xs text-gray-400 mt-1">2024-01-15</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <div class="w-full h-32 bg-gradient-to-br from-blue-400 to-cyan-400"></div>
+                            <div class="p-2">
+                                <p class="text-xs text-gray-600 line-clamp-2">未来城市夜景，赛博朋克风格</p>
+                                <p class="text-xs text-gray-400 mt-1">2024-01-14</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <div class="w-full h-32 bg-gradient-to-br from-yellow-400 to-orange-400"></div>
+                            <div class="p-2">
+                                <p class="text-xs text-gray-600 line-clamp-2">梦幻森林中的精灵</p>
+                                <p class="text-xs text-gray-400 mt-1">2024-01-13</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <div class="w-full h-32 bg-gradient-to-br from-red-400 to-pink-400"></div>
+                            <div class="p-2">
+                                <p class="text-xs text-gray-600 line-clamp-2">古代武侠剑客练剑</p>
+                                <p class="text-xs text-gray-400 mt-1">2024-01-12</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <div class="w-full h-32 bg-gradient-to-br from-indigo-400 to-purple-400"></div>
+                            <div class="p-2">
+                                <p class="text-xs text-gray-600 line-clamp-2">宇宙星云科幻风格</p>
+                                <p class="text-xs text-gray-400 mt-1">2024-01-11</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <div class="w-full h-32 bg-gradient-to-br from-teal-400 to-blue-400"></div>
+                            <div class="p-2">
+                                <p class="text-xs text-gray-600 line-clamp-2">海底世界珊瑚礁</p>
+                                <p class="text-xs text-gray-400 mt-1">2024-01-10</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 未登录状态 -->
+            <div id="not-logged-in" class="hidden">
+                <div class="flex flex-col items-center justify-center h-96">
+                    <div class="w-24 h-24 bg-gray-200 rounded-full mb-6 flex items-center justify-center">
+                        <svg class="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">欢迎来到AI画廊</h3>
+                    <p class="text-sm text-gray-500 mb-8 text-center px-8">登录后可以创作和管理您的AI画作</p>
+                    <button class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg flex items-center transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                        </svg>
+                        微信一键登录
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部导航栏 -->
+        <div class="bg-white border-t border-gray-200 px-4 py-2">
+            <div class="flex justify-around">
+                <div class="flex flex-col items-center py-2">
+                    <div class="w-6 h-6 mb-1">
+                        <svg class="w-full h-full text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-400">首页</span>
+                </div>
+                <div class="flex flex-col items-center py-2">
+                    <div class="w-6 h-6 mb-1">
+                        <svg class="w-full h-full text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-blue-500 font-medium">我的</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 切换登录状态的演示功能
+        function toggleLoginState() {
+            const loggedIn = document.getElementById('logged-in');
+            const notLoggedIn = document.getElementById('not-logged-in');
+            
+            if (loggedIn.classList.contains('block')) {
+                loggedIn.classList.remove('block');
+                loggedIn.classList.add('hidden');
+                notLoggedIn.classList.remove('hidden');
+                notLoggedIn.classList.add('block');
+            } else {
+                loggedIn.classList.remove('hidden');
+                loggedIn.classList.add('block');
+                notLoggedIn.classList.remove('block');
+                notLoggedIn.classList.add('hidden');
+            }
+        }
+
+        // 点击用户头像切换状态（仅用于演示）
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.bg-gradient-to-br')) {
+                toggleLoginState();
+            }
+        });
+    </script>
+</body>
+</html> 

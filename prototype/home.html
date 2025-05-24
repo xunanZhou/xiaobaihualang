@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页 - AI画廊</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://tdesign.tencent.com/miniprogram/dist/tdesign.css">
+    <style>
+        .masonry {
+            column-count: 2;
+            column-gap: 12px;
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 12px;
+        }
+        .floating-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 16px;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 h-screen overflow-hidden">
+    <div class="flex flex-col h-full">
+        <!-- 顶部标题栏 -->
+        <div class="bg-white shadow-sm px-4 py-3 flex items-center justify-center">
+            <h1 class="text-lg font-semibold text-gray-800">AI画廊</h1>
+        </div>
+
+        <!-- 主内容区域 -->
+        <div class="flex-1 overflow-y-auto px-3 py-4">
+            <div class="masonry">
+                <!-- 示例图片卡片 -->
+                <div class="masonry-item bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="w-full h-48 bg-gradient-to-br from-purple-400 to-pink-400"></div>
+                    <div class="p-3">
+                        <p class="text-sm text-gray-600 mb-2">一只可爱的小猫咪在花园里玩耍，阳光明媚，动漫风格</p>
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-blue-400 rounded-full mr-2"></div>
+                            <span class="text-xs text-gray-500">小明</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="masonry-item bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="w-full h-64 bg-gradient-to-br from-blue-400 to-cyan-400"></div>
+                    <div class="p-3">
+                        <p class="text-sm text-gray-600 mb-2">未来城市的夜景，霓虹灯闪烁，赛博朋克风格</p>
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-green-400 rounded-full mr-2"></div>
+                            <span class="text-xs text-gray-500">艺术家小李</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="masonry-item bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="w-full h-56 bg-gradient-to-br from-yellow-400 to-orange-400"></div>
+                    <div class="p-3">
+                        <p class="text-sm text-gray-600 mb-2">梦幻森林中的精灵，魔法光芒环绕，奇幻风格</p>
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-purple-400 rounded-full mr-2"></div>
+                            <span class="text-xs text-gray-500">梦想家</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="masonry-item bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="w-full h-52 bg-gradient-to-br from-red-400 to-pink-400"></div>
+                    <div class="p-3">
+                        <p class="text-sm text-gray-600 mb-2">古代武侠，剑客在山峰上练剑，水墨画风格</p>
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-red-400 rounded-full mr-2"></div>
+                            <span class="text-xs text-gray-500">武侠迷</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="masonry-item bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="w-full h-60 bg-gradient-to-br from-indigo-400 to-purple-400"></div>
+                    <div class="p-3">
+                        <p class="text-sm text-gray-600 mb-2">宇宙中的星云，色彩绚烂，科幻写实风格</p>
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-indigo-400 rounded-full mr-2"></div>
+                            <span class="text-xs text-gray-500">星空观察者</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="masonry-item bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="w-full h-48 bg-gradient-to-br from-teal-400 to-blue-400"></div>
+                    <div class="p-3">
+                        <p class="text-sm text-gray-600 mb-2">海底世界，珊瑚礁和热带鱼，清新自然风格</p>
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-teal-400 rounded-full mr-2"></div>
+                            <span class="text-xs text-gray-500">海洋爱好者</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 悬浮创建按钮 -->
+        <button class="floating-btn w-14 h-14 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+        </button>
+
+        <!-- 底部导航栏 -->
+        <div class="bg-white border-t border-gray-200 px-4 py-2">
+            <div class="flex justify-around">
+                <div class="flex flex-col items-center py-2">
+                    <div class="w-6 h-6 mb-1">
+                        <svg class="w-full h-full text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-blue-500 font-medium">首页</span>
+                </div>
+                <div class="flex flex-col items-center py-2">
+                    <div class="w-6 h-6 mb-1">
+                        <svg class="w-full h-full text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-400">我的</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

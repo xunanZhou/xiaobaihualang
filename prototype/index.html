@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI画廊小程序 - 原型展示</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* iPhone 15 Pro 尺寸: 393 x 852 */
+        .phone-frame {
+            width: 393px;
+            height: 852px;
+            border-radius: 47px;
+            padding: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 39px;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+        }
+        
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            z-index: 10;
+        }
+        
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 39px;
+        }
+        
+        .prototype-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .page-title {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .main-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+        
+        .main-title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .main-title p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="prototype-container">
+        <div class="main-title">
+            <h1>AI画廊小程序</h1>
+            <p>原型界面展示 - iPhone 15 Pro 尺寸</p>
+        </div>
+        
+        <!-- 首页 -->
+        <div class="phone-frame" style="position: relative;">
+            <div class="phone-screen">
+                <div class="phone-notch"></div>
+                <iframe src="home.html" class="phone-content"></iframe>
+            </div>
+            <div class="page-title">首页 - 图片展示</div>
+        </div>
+        
+        <!-- 个人中心页面 -->
+        <div class="phone-frame" style="position: relative;">
+            <div class="phone-screen">
+                <div class="phone-notch"></div>
+                <iframe src="profile.html" class="phone-content"></iframe>
+            </div>
+            <div class="page-title">我的 - 个人中心</div>
+        </div>
+        
+        <!-- 创建图片页面 -->
+        <div class="phone-frame" style="position: relative;">
+            <div class="phone-screen">
+                <div class="phone-notch"></div>
+                <iframe src="create.html" class="phone-content"></iframe>
+            </div>
+            <div class="page-title">创建图片 - AI生成</div>
+        </div>
+    </div>
+    
+    <!-- 页面说明 -->
+    <div style="background: white; padding: 40px; margin: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        <h2 style="color: #333; margin-bottom: 20px; font-size: 1.5rem; font-weight: 600;">功能说明</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div style="padding: 20px; background: #f8f9fa; border-radius: 12px;">
+                <h3 style="color: #667eea; margin-bottom: 10px;">🏠 首页</h3>
+                <ul style="color: #666; line-height: 1.6;">
+                    <li>• 瀑布流展示AI画作</li>
+                    <li>• 显示作者信息和提示词</li>
+                    <li>• 右下角悬浮创建按钮</li>
+                    <li>• 底部导航栏</li>
+                </ul>
+            </div>
+            <div style="padding: 20px; background: #f8f9fa; border-radius: 12px;">
+                <h3 style="color: #667eea; margin-bottom: 10px;">👤 我的</h3>
+                <ul style="color: #666; line-height: 1.6;">
+                    <li>• 微信登录功能</li>
+                    <li>• 个人信息展示</li>
+                    <li>• 个人画廊管理</li>
+                    <li>• 作品统计信息</li>
+                </ul>
+            </div>
+            <div style="padding: 20px; background: #f8f9fa; border-radius: 12px;">
+                <h3 style="color: #667eea; margin-bottom: 10px;">🎨 创建图片</h3>
+                <ul style="color: #666; line-height: 1.6;">
+                    <li>• 提示词输入和优化</li>
+                    <li>• 风格标签快速选择</li>
+                    <li>• 负面提示词设置</li>
+                    <li>• 创作灵感示例</li>
+                    <li>• 生成和发布功能</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
+            <h3 style="margin-bottom: 10px;">🎯 设计特点</h3>
+            <ul style="line-height: 1.6;">
+                <li>• 采用 TDesign 设计风格，界面简洁统一</li>
+                <li>• 使用 Tailwind CSS 实现响应式布局</li>
+                <li>• iPhone 15 Pro 尺寸 (393×852px) 真实模拟</li>
+                <li>• 圆角设计贴近真实移动设备外观</li>
+                <li>• 交互反馈和加载状态完整</li>
+            </ul>
+        </div>
+        
+        <div style="margin-top: 20px; text-align: center; color: #999; font-size: 14px;">
+            <p>💡 提示：点击个人中心页面的头像可以切换登录状态</p>
+            <p>🎨 提示：创建页面包含完整的AI图片生成流程演示</p>
+        </div>
+    </div>
+</body>
+</html>

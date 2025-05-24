@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建图片 - AI画廊</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://tdesign.tencent.com/miniprogram/dist/tdesign.css">
+</head>
+<body class="bg-gray-50 h-screen overflow-hidden">
+    <div class="flex flex-col h-full">
+        <!-- 顶部标题栏 -->
+        <div class="bg-white shadow-sm px-4 py-3 flex items-center">
+            <button class="mr-3 p-1">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-semibold text-gray-800">创建图片</h1>
+        </div>
+
+        <!-- 主内容区域 -->
+        <div class="flex-1 overflow-y-auto p-4">
+            <!-- 提示词输入区域 -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">描述你想要的图片</label>
+                <textarea 
+                    id="prompt-input"
+                    class="w-full h-24 p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="试试描述：主角 + 在哪里 + 做什么 + 像什么风格？&#10;例如：一只可爱的小猫咪在花园里玩耍，阳光明媚，动漫风格"
+                ></textarea>
+            </div>
+
+            <!-- 风格标签 -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-3">选择风格</label>
+                <div class="flex flex-wrap gap-2">
+                    <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition-colors" onclick="addStyle('写实')">写实</button>
+                    <button class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm hover:bg-purple-200 transition-colors" onclick="addStyle('动漫')">动漫</button>
+                    <button class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm hover:bg-green-200 transition-colors" onclick="addStyle('电影感')">电影感</button>
+                    <button class="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm hover:bg-pink-200 transition-colors" onclick="addStyle('梦幻')">梦幻</button>
+                    <button class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm hover:bg-yellow-200 transition-colors" onclick="addStyle('水墨画')">水墨画</button>
+                    <button class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm hover:bg-indigo-200 transition-colors" onclick="addStyle('科幻')">科幻</button>
+                    <button class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm hover:bg-red-200 transition-colors" onclick="addStyle('复古')">复古</button>
+                    <button class="px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-sm hover:bg-teal-200 transition-colors" onclick="addStyle('简约')">简约</button>
+                </div>
+            </div>
+
+            <!-- 负面提示词（可选） -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">不希望出现的内容（可选）</label>
+                <input 
+                    type="text" 
+                    id="negative-prompt"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="例如：不要文字、不要模糊、不要暗色调"
+                >
+            </div>
+
+            <!-- 生成的图片展示区域 -->
+            <div id="generated-image" class="bg-white rounded-lg shadow-sm p-4 mb-4 hidden">
+                <h3 class="text-sm font-medium text-gray-700 mb-3">生成的图片</h3>
+                <div class="w-full h-64 bg-gradient-to-br from-purple-400 to-pink-400 rounded-lg mb-3 flex items-center justify-center">
+                    <span class="text-white text-lg font-semibold">AI生成的图片</span>
+                </div>
+                <div class="flex justify-between">
+                    <button id="regenerate-btn" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors">
+                        重新生成
+                    </button>
+                    <button id="publish-btn" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+                        发布
+                    </button>
+                </div>
+            </div>
+
+            <!-- 生成按钮 -->
+            <button id="generate-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-medium transition-colors">
+                生成图片
+            </button>
+
+            <!-- 加载状态 -->
+            <div id="loading" class="hidden bg-white rounded-lg shadow-sm p-8 mb-4">
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                    <p class="text-gray-600">AI正在为您创作中...</p>
+                    <p class="text-sm text-gray-400 mt-1">预计需要10-30秒</p>
+                </div>
+            </div>
+
+            <!-- 灵感示例 -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mt-4">
+                <h3 class="text-sm font-medium text-gray-700 mb-3">💡 创作灵感</h3>
+                <div class="space-y-2">
+                    <div class="p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors" onclick="useExample('一只橘色的小猫咪在樱花树下打盹，春日午后，温暖的阳光，日系插画风格')">
+                        <p class="text-sm text-gray-700">一只橘色的小猫咪在樱花树下打盹，春日午后，温暖的阳光，日系插画风格</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors" onclick="useExample('未来城市的夜景，霓虹灯闪烁，飞行汽车穿梭，赛博朋克风格，高清细节')">
+                        <p class="text-sm text-gray-700">未来城市的夜景，霓虹灯闪烁，飞行汽车穿梭，赛博朋克风格，高清细节</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors" onclick="useExample('古代中国山水画，云雾缭绕的山峰，小桥流水，水墨画风格，意境深远')">
+                        <p class="text-sm text-gray-700">古代中国山水画，云雾缭绕的山峰，小桥流水，水墨画风格，意境深远</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const promptInput = document.getElementById('prompt-input');
+        const generateBtn = document.getElementById('generate-btn');
+        const loading = document.getElementById('loading');
+        const generatedImage = document.getElementById('generated-image');
+        const publishBtn = document.getElementById('publish-btn');
+        const regenerateBtn = document.getElementById('regenerate-btn');
+
+        // 添加风格到提示词
+        function addStyle(style) {
+            const currentText = promptInput.value;
+            if (currentText && !currentText.includes(style)) {
+                promptInput.value = currentText + '，' + style + '风格';
+            } else if (!currentText) {
+                promptInput.value = style + '风格';
+            }
+        }
+
+        // 使用示例提示词
+        function useExample(example) {
+            promptInput.value = example;
+        }
+
+        // 生成图片
+        generateBtn.addEventListener('click', function() {
+            const prompt = promptInput.value.trim();
+            if (!prompt) {
+                alert('请输入图片描述');
+                return;
+            }
+
+            // 显示加载状态
+            generateBtn.classList.add('hidden');
+            loading.classList.remove('hidden');
+
+            // 模拟生成过程
+            setTimeout(() => {
+                loading.classList.add('hidden');
+                generatedImage.classList.remove('hidden');
+                
+                // 随机生成不同的渐变色
+                const colors = [
+                    'from-purple-400 to-pink-400',
+                    'from-blue-400 to-cyan-400',
+                    'from-yellow-400 to-orange-400',
+                    'from-red-400 to-pink-400',
+                    'from-indigo-400 to-purple-400',
+                    'from-teal-400 to-blue-400'
+                ];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                const imageDiv = generatedImage.querySelector('.bg-gradient-to-br');
+                imageDiv.className = `w-full h-64 bg-gradient-to-br ${randomColor} rounded-lg mb-3 flex items-center justify-center`;
+            }, 3000);
+        });
+
+        // 重新生成
+        regenerateBtn.addEventListener('click', function() {
+            generatedImage.classList.add('hidden');
+            generateBtn.classList.remove('hidden');
+        });
+
+        // 发布图片
+        publishBtn.addEventListener('click', function() {
+            // 模拟发布过程
+            publishBtn.textContent = '发布中...';
+            publishBtn.disabled = true;
+            
+            setTimeout(() => {
+                alert('发布成功！即将返回首页');
+                // 这里可以添加返回首页的逻辑
+            }, 1500);
+        });
+    </script>
+</body>
+</html> 

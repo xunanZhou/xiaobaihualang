@@ -1,0 +1,612 @@
+/* pages/profile/profile.wxss */
+
+.profile-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+}
+
+/* 状态栏占位 */
+.status-bar {
+  width: 100%;
+  background: transparent;
+}
+
+/* 标题栏 */
+.title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20rpx);
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.1);
+}
+
+.title-text {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* 主要内容区域 */
+.main-content {
+  padding: 40rpx 32rpx;
+  background: #f8f9fa;
+  border-radius: 40rpx 40rpx 0 0;
+  margin-top: 20rpx;
+  min-height: calc(100vh - 200rpx);
+}
+
+/* 用户信息卡片 */
+.user-card {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.user-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8rpx;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  margin-right: 24rpx;
+  border: 6rpx solid #f0f0f0;
+}
+
+.user-details {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8rpx;
+}
+
+.user-role {
+  font-size: 28rpx;
+  color: #666666;
+}
+
+/* 用户统计 */
+.user-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 32rpx;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #667eea;
+  display: block;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #999999;
+  margin-top: 8rpx;
+}
+
+/* 成就徽章 */
+.achievements {
+  display: flex;
+  gap: 16rpx;
+}
+
+.achievement-badge {
+  padding: 12rpx 24rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+.achievement-primary {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.achievement-success {
+  background: rgba(82, 196, 26, 0.1);
+  color: #52c41a;
+}
+
+/* 快捷操作 */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24rpx;
+  margin-bottom: 40rpx;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32rpx 16rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.action-item:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.action-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16rpx;
+}
+
+.action-label {
+  font-size: 24rpx;
+  color: #333333;
+  font-weight: 500;
+}
+
+/* 个人画廊 */
+.gallery-section {
+  margin-bottom: 40rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.view-all-btn {
+  font-size: 28rpx;
+  color: #667eea;
+  padding: 8rpx 16rpx;
+  border-radius: 16rpx;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.artwork-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+.artwork-card {
+  background: #ffffff;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.artwork-card:active {
+  transform: translateY(-4rpx);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.12);
+}
+
+.artwork-image {
+  width: 100%;
+  height: 240rpx;
+  background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.artwork-info {
+  padding: 20rpx;
+}
+
+.artwork-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.artwork-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.artwork-likes {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+/* 未登录状态 */
+.unlogged-container {
+  padding: 40rpx 32rpx;
+  background: #f8f9fa;
+  border-radius: 40rpx 40rpx 0 0;
+  margin-top: 20rpx;
+  min-height: calc(100vh - 200rpx);
+}
+
+.welcome-section {
+  text-align: center;
+  padding: 80rpx 40rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  margin-bottom: 40rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
+}
+
+.welcome-icon {
+  width: 160rpx;
+  height: 160rpx;
+  margin: 0 auto 32rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80rpx;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10rpx); }
+}
+
+.welcome-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 16rpx;
+}
+
+.welcome-subtitle {
+  font-size: 28rpx;
+  color: #666666;
+  margin-bottom: 48rpx;
+  line-height: 1.6;
+}
+
+.login-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 48rpx;
+  padding: 24rpx 80rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.login-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.4);
+}
+
+.login-desc {
+  font-size: 24rpx;
+  color: #999999;
+  margin-top: 24rpx;
+  line-height: 1.5;
+}
+
+/* 功能介绍 */
+.features-section {
+  margin-bottom: 40rpx;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+.feature-card {
+  padding: 32rpx;
+  border-radius: 20rpx;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.feature-card:active {
+  transform: scale(0.95);
+}
+
+.feature-icon {
+  font-size: 48rpx;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.feature-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.feature-desc {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+/* 作品预览 */
+.preview-section {
+  margin-bottom: 40rpx;
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+}
+
+.preview-item {
+  aspect-ratio: 1;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 24rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.preview-item:active {
+  transform: scale(0.95);
+}
+
+/* 创作灵感 */
+.inspiration-section {
+  margin-bottom: 40rpx;
+}
+
+.inspiration-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+.inspiration-card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.inspiration-card:active {
+  transform: translateY(-4rpx);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.12);
+}
+
+.inspiration-emoji {
+  font-size: 48rpx;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.inspiration-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8rpx;
+}
+
+.inspiration-desc {
+  font-size: 24rpx;
+  color: #666666;
+  line-height: 1.5;
+}
+
+/* 登录对话框 */
+.login-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog-content {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 48rpx;
+  margin: 0 40rpx;
+  text-align: center;
+  max-width: 600rpx;
+  width: 100%;
+}
+
+.dialog-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 16rpx;
+}
+
+.dialog-message {
+  font-size: 28rpx;
+  color: #666666;
+  margin-bottom: 40rpx;
+  line-height: 1.6;
+}
+
+.dialog-buttons {
+  display: flex;
+  gap: 20rpx;
+}
+
+.dialog-btn {
+  flex: 1;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.dialog-btn-cancel {
+  background: #f5f5f5;
+  color: #666666;
+}
+
+.dialog-btn-confirm {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+}
+
+.dialog-btn:active {
+  transform: scale(0.95);
+}
+
+/* 底部导航 */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-top: 1rpx solid #f0f0f0;
+  padding: 16rpx 0 env(safe-area-inset-bottom);
+  z-index: 100;
+}
+
+.nav-items {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8rpx 16rpx;
+  transition: all 0.3s ease;
+}
+
+.nav-item:active {
+  transform: scale(0.95);
+}
+
+.nav-icon {
+  width: 48rpx;
+  height: 48rpx;
+  margin-bottom: 8rpx;
+  opacity: 0.6;
+}
+
+.nav-item.active .nav-icon {
+  opacity: 1;
+}
+
+.nav-label {
+  font-size: 20rpx;
+  color: #999999;
+}
+
+.nav-item.active .nav-label {
+  color: #667eea;
+  font-weight: 500;
+}
+
+/* 响应式设计 */
+@media (max-width: 375px) {
+  .main-content {
+    padding: 32rpx 24rpx;
+  }
+  
+  .user-card {
+    padding: 32rpx;
+  }
+  
+  .quick-actions {
+    gap: 16rpx;
+  }
+  
+  .action-item {
+    padding: 24rpx 12rpx;
+  }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .main-content {
+    background: #1a1a1a;
+  }
+  
+  .user-card,
+  .artwork-card,
+  .feature-card,
+  .inspiration-card {
+    background: #2a2a2a;
+    border: 1rpx solid #333333;
+  }
+  
+  .user-name,
+  .section-title,
+  .artwork-title,
+  .inspiration-title {
+    color: #ffffff;
+  }
+  
+  .user-role,
+  .stat-label,
+  .artwork-meta,
+  .inspiration-desc {
+    color: #cccccc;
+  }
+} 

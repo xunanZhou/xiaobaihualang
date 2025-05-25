@@ -1,54 +1,129 @@
 // index.ts
 // 获取应用实例
-const app = getApp<IAppOption>()
-const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+(function() {
+  const appInstance = getApp<IAppOption>()
 
-Component({
-  data: {
-    motto: 'Hello World',
-    userInfo: {
-      avatarUrl: defaultAvatarUrl,
-      nickName: '',
+  interface Artwork {
+    id: number
+    prompt: string
+    imageUrl: string
+    author: string
+    avatar: string
+    likes: number
+    createTime: string
+    styles: string[]
+  }
+
+  interface IndexData {
+    artworks: Artwork[]
+    loading: boolean
+    refreshing: boolean
+  }
+
+  Page({
+    data: {
+      artworks: [],
+      loading: false,
+      refreshing: false
+    } as IndexData,
+
+    onLoad() {
+      this.loadArtworks()
     },
-    hasUserInfo: false,
-    canIUseGetUserProfile: wx.canIUse('getUserProfile'),
-    canIUseNicknameComp: wx.canIUse('input.type.nickname'),
-  },
-  methods: {
-    // 事件处理函数
-    bindViewTap() {
-      wx.navigateTo({
-        url: '../logs/logs',
-      })
+
+    onShow() {
+      // 每次显示页面时刷新数据
+      this.loadArtworks()
     },
-    onChooseAvatar(e: any) {
-      const { avatarUrl } = e.detail
-      const { nickName } = this.data.userInfo
+
+    // 加载作品列表
+    loadArtworks() {
       this.setData({
-        "userInfo.avatarUrl": avatarUrl,
-        hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
+        loading: true
       })
+
+      // 模拟网络请求延迟
+      setTimeout(() => {
+        this.setData({
+          artworks: appInstance.globalData.artworks,
+          loading: false
+        })
+      }, 500)
     },
-    onInputChange(e: any) {
-      const nickName = e.detail.value
-      const { avatarUrl } = this.data.userInfo
+
+    // 下拉刷新
+    onPullDownRefresh() {
       this.setData({
-        "userInfo.nickName": nickName,
-        hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
+        refreshing: true
       })
+
+      setTimeout(() => {
+        this.setData({
+          artworks: appInstance.globalData.artworks,
+          refreshing: false
+        })
+        wx.stopPullDownRefresh()
+      }, 1000)
     },
-    getUserProfile() {
-      // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-      wx.getUserProfile({
-        desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-        success: (res) => {
-          console.log(res)
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
+
+    // 点赞作品
+    onLikeArtwork(e: WechatMiniprogram.TouchEvent) {
+      const { id } = e.currentTarget.dataset
+      const artworks = this.data.artworks.map((artwork: Artwork) => {
+        if (artwork.id === id) {
+          return { ...artwork, likes: artwork.likes + 1 }
         }
+        return artwork
+      })
+
+      this.setData({ artworks })
+
+      // 更新全局数据
+      appInstance.globalData.artworks = artworks
+      wx.setStorageSync('artworks', artworks)
+
+      // 显示点赞动画
+      wx.showToast({
+        title: '点赞成功',
+        icon: 'success',
+        duration: 1000
       })
     },
-  },
-})
+
+    // 查看作品详情
+    onViewDetail(e: WechatMiniprogram.TouchEvent) {
+      const { id } = e.currentTarget.dataset
+      wx.navigateTo({
+        url: `/pages/detail/detail?id=${id}`
+      })
+    },
+
+    // 跳转到创作页面
+    onCreateArtwork() {
+      if (!appInstance.globalData.isLoggedIn) {
+        wx.showModal({
+          title: '提示',
+          content: '请先登录后再进行创作',
+          confirmText: '去登录',
+          success: (res) => {
+            if (res.confirm) {
+              wx.switchTab({
+                url: '/pages/profile/profile'
+              })
+            }
+          }
+        })
+        return
+      }
+
+      wx.navigateTo({
+        url: '/pages/create/create'
+      })
+    },
+
+    // 获取时间差显示
+    getTimeAgo(createTime: string): string {
+      return appInstance.getTimeAgo(createTime)
+    }
+  })
+})() 

@@ -6,13 +6,46 @@
     <title>发布成功 - AI画廊</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://tdesign.tencent.com/miniprogram/dist/tdesign.css">
+    <style>
+        .success-animation {
+            animation: successPulse 2s ease-in-out infinite;
+        }
+        @keyframes successPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        .share-btn {
+            transition: all 0.2s ease;
+        }
+        .share-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .action-btn {
+            transition: all 0.3s ease;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
 </head>
 <body class="bg-gray-50 h-screen overflow-hidden">
     <div class="flex flex-col h-full">
         <!-- 顶部标题栏 -->
         <div class="bg-white shadow-sm px-4 py-3 flex items-center">
-            <button class="mr-3 p-1">
-                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button class="mr-3 p-2 rounded-full hover:bg-gray-100 transition-colors">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
             </button>
@@ -20,86 +53,221 @@
         </div>
 
         <!-- 主内容区域 -->
-        <div class="flex-1 flex flex-col items-center justify-center px-8">
-            <!-- 成功动画图标 -->
-            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-8 animate-pulse">
-                <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-            </div>
-            
-            <!-- 成功文案 -->
-            <h2 class="text-2xl font-bold text-gray-800 mb-3">发布成功！</h2>
-            <p class="text-gray-500 text-center mb-8 leading-relaxed">您的AI画作已成功发布到画廊<br/>快去首页看看大家的反应吧</p>
-            
-            <!-- 发布的作品预览 -->
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8 w-full max-w-sm">
-                <div class="w-full h-48 bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
-                    <span class="text-white text-lg font-semibold">您的AI画作</span>
-                </div>
-                <div class="p-4">
-                    <p class="text-sm text-gray-700 font-medium mb-2">一只可爱的小猫咪在花园里玩耍，阳光明媚，动漫风格</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full mr-2"></div>
-                            <span class="text-xs text-gray-500">张小艺</span>
-                        </div>
-                        <span class="text-xs text-gray-400">刚刚发布</span>
+        <div class="flex-1 overflow-y-auto p-4">
+            <!-- 成功状态 -->
+            <div class="bg-white rounded-xl shadow-sm p-8 mb-6 text-center">
+                <div class="success-animation mb-6">
+                    <div class="w-20 h-20 bg-green-100 rounded-full mx-auto flex items-center justify-center">
+                        <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
                     </div>
                 </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">发布成功！</h2>
+                <p class="text-gray-500 mb-6">您的作品已成功发布到画廊，快去首页看看大家的反应吧～</p>
+                
+                <!-- 作品预览 -->
+                <div class="bg-gradient-to-br from-purple-400 to-pink-400 rounded-xl h-48 mb-4 flex items-center justify-center">
+                    <span class="text-white text-lg font-semibold">您的AI作品</span>
+                </div>
+                
+                <div class="text-left bg-gray-50 rounded-xl p-4">
+                    <h3 class="font-semibold text-gray-800 mb-2">作品信息</h3>
+                    <p class="text-sm text-gray-600 mb-2">
+                        <span class="font-medium">描述：</span>一只橘色的小猫咪在樱花树下打盹，春日午后，温暖的阳光，日系插画风格
+                    </p>
+                    <p class="text-sm text-gray-600">
+                        <span class="font-medium">创作者：</span>张小艺
+                    </p>
+                </div>
             </div>
-            
-            <!-- 统计信息 -->
-            <div class="bg-white rounded-xl p-6 mb-8 w-full max-w-sm">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">发布统计</h3>
+
+            <!-- 统计数据 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-6 h-6 bg-blue-100 rounded-full mr-2 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800">您的创作统计</h3>
+                </div>
+                
                 <div class="grid grid-cols-3 gap-4">
-                    <div class="text-center">
-                        <p class="text-2xl font-bold text-blue-500">13</p>
-                        <p class="text-xs text-gray-500">总作品</p>
+                    <div class="stat-card bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center">
+                        <div class="text-2xl font-bold text-blue-600 mb-1">13</div>
+                        <div class="text-sm text-blue-500">总作品</div>
                     </div>
-                    <div class="text-center">
-                        <p class="text-2xl font-bold text-purple-500">156</p>
-                        <p class="text-xs text-gray-500">总获赞</p>
+                    <div class="stat-card bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-4 text-center">
+                        <div class="text-2xl font-bold text-pink-600 mb-1">157</div>
+                        <div class="text-sm text-pink-500">总获赞</div>
                     </div>
-                    <div class="text-center">
-                        <p class="text-2xl font-bold text-green-500">8</p>
-                        <p class="text-xs text-gray-500">连续天数</p>
+                    <div class="stat-card bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 text-center">
+                        <div class="text-2xl font-bold text-green-600 mb-1">8</div>
+                        <div class="text-sm text-green-500">连续天数</div>
+                    </div>
+                </div>
+                
+                <!-- 成就提示 -->
+                <div class="mt-4 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-200">
+                    <div class="flex items-center">
+                        <div class="text-2xl mr-3">🏆</div>
+                        <div>
+                            <p class="text-sm font-semibold text-orange-700">恭喜解锁新成就！</p>
+                            <p class="text-xs text-orange-600">「多产创作者」- 发布超过10个作品</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- 操作按钮 -->
-            <div class="w-full max-w-sm space-y-3">
-                <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-4 rounded-xl font-medium transition-colors">
+            <div class="space-y-3 mb-6">
+                <button class="action-btn w-full gradient-bg text-white py-4 rounded-xl font-semibold text-lg">
+                    <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
                     返回首页
                 </button>
-                <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-xl font-medium transition-colors">
+                
+                <button class="action-btn w-full bg-white border-2 border-gray-200 text-gray-700 py-4 rounded-xl font-semibold text-lg hover:border-gray-300">
+                    <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
                     继续创作
                 </button>
             </div>
-            
-            <!-- 分享提示 -->
-            <div class="mt-6 text-center">
-                <p class="text-sm text-gray-400 mb-2">分享给朋友，让更多人看到您的作品</p>
-                <div class="flex justify-center space-x-4">
-                    <button class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-                        </svg>
-                    </button>
-                    <button class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
-                        </svg>
-                    </button>
-                    <button class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+            <!-- 分享功能 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-6 h-6 bg-purple-100 rounded-full mr-2 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
                         </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800">分享您的作品</h3>
+                </div>
+                
+                <p class="text-gray-500 text-sm mb-4">让更多朋友看到您的精彩创作</p>
+                
+                <div class="grid grid-cols-4 gap-3">
+                    <button class="share-btn flex flex-col items-center p-4 bg-green-50 hover:bg-green-100 rounded-xl">
+                        <div class="w-10 h-10 bg-green-500 rounded-full mb-2 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs text-green-600 font-medium">微信</span>
+                    </button>
+                    
+                    <button class="share-btn flex flex-col items-center p-4 bg-blue-50 hover:bg-blue-100 rounded-xl">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full mb-2 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs text-blue-600 font-medium">朋友圈</span>
+                    </button>
+                    
+                    <button class="share-btn flex flex-col items-center p-4 bg-red-50 hover:bg-red-100 rounded-xl">
+                        <div class="w-10 h-10 bg-red-500 rounded-full mb-2 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs text-red-600 font-medium">微博</span>
+                    </button>
+                    
+                    <button class="share-btn flex flex-col items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-xl">
+                        <div class="w-10 h-10 bg-gray-500 rounded-full mb-2 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs text-gray-600 font-medium">复制链接</span>
                     </button>
                 </div>
             </div>
+
+            <!-- 推荐创作 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-6 h-6 bg-yellow-100 rounded-full mr-2 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800">继续创作灵感</h3>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl cursor-pointer hover:shadow-md transition-all">
+                        <div class="flex items-start">
+                            <div class="text-2xl mr-3">🌙</div>
+                            <div>
+                                <p class="text-sm text-gray-700 font-medium mb-1">夜景系列</p>
+                                <p class="text-xs text-gray-500">星空下的城市夜景，灯火通明，现代都市风格</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-gradient-to-r from-green-50 to-teal-50 rounded-xl cursor-pointer hover:shadow-md transition-all">
+                        <div class="flex items-start">
+                            <div class="text-2xl mr-3">🌺</div>
+                            <div>
+                                <p class="text-sm text-gray-700 font-medium mb-1">花卉系列</p>
+                                <p class="text-xs text-gray-500">盛开的向日葵田，金黄色的花海，温暖明亮</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部间距 -->
+            <div class="h-20"></div>
         </div>
     </div>
+
+    <script>
+        // 分享功能
+        document.querySelectorAll('.share-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const platform = this.querySelector('span').textContent;
+                
+                // 添加点击效果
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+                
+                // 模拟分享
+                setTimeout(() => {
+                    alert(`已分享到${platform}`);
+                }, 200);
+            });
+        });
+
+        // 返回首页
+        document.querySelector('.gradient-bg').addEventListener('click', function() {
+            alert('即将返回首页');
+            // 这里可以添加返回首页的逻辑
+        });
+
+        // 继续创作
+        document.querySelector('.bg-white.border-2').addEventListener('click', function() {
+            alert('即将跳转到创作页面');
+            // 这里可以添加跳转到创作页面的逻辑
+        });
+
+        // 推荐创作点击
+        document.querySelectorAll('.bg-gradient-to-r').forEach(item => {
+            if (item.classList.contains('cursor-pointer')) {
+                item.addEventListener('click', function() {
+                    const title = this.querySelector('.font-medium').textContent;
+                    alert(`即将使用"${title}"模板创作`);
+                });
+            }
+        });
+    </script>
 </body>
 </html> 

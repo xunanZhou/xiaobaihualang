@@ -19,33 +19,35 @@
             <!-- 用户信息卡片 -->
             <div class="bg-white mx-4 mt-4 rounded-xl shadow-sm p-6">
                 <div class="flex items-center mb-4">
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full mr-4 flex items-center justify-center shadow-lg">
-                        <span class="text-white text-xl font-bold">张</span>
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full mr-4 flex items-center justify-center">
+                        <span class="text-white text-xl font-semibold">张</span>
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-xl font-bold text-gray-800 mb-1">张小艺</h3>
-                        <p class="text-sm text-gray-500 mb-2">AI艺术创作者</p>
-                        <div class="flex items-center space-x-4">
-                            <div class="text-center">
-                                <p class="text-lg font-bold text-blue-500">12</p>
-                                <p class="text-xs text-gray-400">作品</p>
-                            </div>
-                            <div class="text-center">
-                                <p class="text-lg font-bold text-purple-500">156</p>
-                                <p class="text-xs text-gray-400">获赞</p>
-                            </div>
-                            <div class="text-center">
-                                <p class="text-lg font-bold text-green-500">7</p>
-                                <p class="text-xs text-gray-400">天</p>
-                            </div>
-                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">张小艺</h3>
+                        <p class="text-sm text-gray-500">AI艺术创作者</p>
+                    </div>
+                </div>
+                
+                <!-- 统计数据 -->
+                <div class="grid grid-cols-3 gap-4 mb-4">
+                    <div class="text-center">
+                        <p class="text-2xl font-bold text-blue-500">12</p>
+                        <p class="text-xs text-gray-500">作品</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-2xl font-bold text-purple-500">156</p>
+                        <p class="text-xs text-gray-500">获赞</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-2xl font-bold text-green-500">7</p>
+                        <p class="text-xs text-gray-500">天</p>
                     </div>
                 </div>
                 
                 <!-- 成就徽章 -->
-                <div class="flex space-x-2">
-                    <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">🎨 新手画家</span>
-                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">⭐ 活跃创作者</span>
+                <div class="flex gap-2 mb-4">
+                    <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">新手画家</span>
+                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">活跃创作者</span>
                 </div>
             </div>
 
@@ -55,11 +57,12 @@
                     <div class="bg-white rounded-xl p-4 text-center shadow-sm">
                         <div class="w-10 h-10 bg-blue-100 rounded-full mx-auto mb-2 flex items-center justify-center">
                             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                             </svg>
                         </div>
-                        <p class="text-xs text-gray-600">创作</p>
+                        <p class="text-xs text-gray-600">创建</p>
                     </div>
+                    
                     <div class="bg-white rounded-xl p-4 text-center shadow-sm">
                         <div class="w-10 h-10 bg-purple-100 rounded-full mx-auto mb-2 flex items-center justify-center">
                             <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,6 +71,7 @@
                         </div>
                         <p class="text-xs text-gray-600">收藏</p>
                     </div>
+                    
                     <div class="bg-white rounded-xl p-4 text-center shadow-sm">
                         <div class="w-10 h-10 bg-green-100 rounded-full mx-auto mb-2 flex items-center justify-center">
                             <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,9 +80,10 @@
                         </div>
                         <p class="text-xs text-gray-600">统计</p>
                     </div>
+                    
                     <div class="bg-white rounded-xl p-4 text-center shadow-sm">
-                        <div class="w-10 h-10 bg-orange-100 rounded-full mx-auto mb-2 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-10 h-10 bg-gray-100 rounded-full mx-auto mb-2 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
@@ -89,65 +94,82 @@
             </div>
 
             <!-- 个人画廊 -->
-            <div class="px-4 mt-6">
+            <div class="mx-4 mt-6">
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-lg font-bold text-gray-800">个人画廊</h2>
-                    <button class="text-blue-500 text-sm">查看全部</button>
+                    <h2 class="text-lg font-semibold text-gray-800">个人画廊</h2>
+                    <button class="text-sm text-blue-500 font-medium">查看全部</button>
                 </div>
+                
                 <div class="grid grid-cols-2 gap-3">
                     <!-- 作品卡片 -->
                     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                        <div class="w-full h-36 bg-gradient-to-br from-purple-400 to-pink-400 relative">
-                            <div class="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
-                                ❤️ 23
-                            </div>
-                        </div>
+                        <div class="w-full h-32 bg-gradient-to-br from-purple-400 to-pink-400"></div>
                         <div class="p-3">
-                            <p class="text-sm text-gray-700 font-medium mb-1 line-clamp-2">可爱的小猫咪在花园里玩耍</p>
-                            <p class="text-xs text-gray-400">2024-01-15</p>
+                            <p class="text-sm text-gray-700 font-medium mb-1">可爱小猫</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-gray-400">2024-01-15</span>
+                                <div class="flex items-center">
+                                    <svg class="w-3 h-3 text-red-400 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                    </svg>
+                                    <span class="text-xs text-gray-400">23</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                        <div class="w-full h-36 bg-gradient-to-br from-blue-400 to-cyan-400 relative">
-                            <div class="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
-                                ❤️ 45
-                            </div>
-                        </div>
+                        <div class="w-full h-32 bg-gradient-to-br from-blue-400 to-cyan-400"></div>
                         <div class="p-3">
-                            <p class="text-sm text-gray-700 font-medium mb-1 line-clamp-2">未来城市夜景，赛博朋克风格</p>
-                            <p class="text-xs text-gray-400">2024-01-14</p>
+                            <p class="text-sm text-gray-700 font-medium mb-1">未来城市</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-gray-400">2024-01-14</span>
+                                <div class="flex items-center">
+                                    <svg class="w-3 h-3 text-red-400 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                    </svg>
+                                    <span class="text-xs text-gray-400">45</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                        <div class="w-full h-36 bg-gradient-to-br from-yellow-400 to-orange-400 relative">
-                            <div class="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
-                                ❤️ 31
-                            </div>
-                        </div>
+                        <div class="w-full h-32 bg-gradient-to-br from-yellow-400 to-orange-400"></div>
                         <div class="p-3">
-                            <p class="text-sm text-gray-700 font-medium mb-1 line-clamp-2">梦幻森林中的精灵</p>
-                            <p class="text-xs text-gray-400">2024-01-13</p>
+                            <p class="text-sm text-gray-700 font-medium mb-1">梦幻精灵</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-gray-400">2024-01-13</span>
+                                <div class="flex items-center">
+                                    <svg class="w-3 h-3 text-red-400 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                    </svg>
+                                    <span class="text-xs text-gray-400">31</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                        <div class="w-full h-36 bg-gradient-to-br from-red-400 to-pink-400 relative">
-                            <div class="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
-                                ❤️ 18
-                            </div>
-                        </div>
+                        <div class="w-full h-32 bg-gradient-to-br from-red-400 to-pink-400"></div>
                         <div class="p-3">
-                            <p class="text-sm text-gray-700 font-medium mb-1 line-clamp-2">古代武侠剑客练剑</p>
-                            <p class="text-xs text-gray-400">2024-01-12</p>
+                            <p class="text-sm text-gray-700 font-medium mb-1">武侠剑客</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-gray-400">2024-01-12</span>
+                                <div class="flex items-center">
+                                    <svg class="w-3 h-3 text-red-400 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                    </svg>
+                                    <span class="text-xs text-gray-400">18</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
+            
             <!-- 底部间距 -->
-            <div class="h-4"></div>
+            <div class="h-20"></div>
         </div>
 
         <!-- 底部导航栏 -->

@@ -1,0 +1,158 @@
+<!--pages/test/test.wxml-->
+<view class="test-container">
+  <!-- 页面标题 -->
+  <view class="test-header">
+    <text class="test-title">AI画廊小程序测试页面</text>
+    <text class="test-subtitle">验证基本功能和组件</text>
+  </view>
+
+  <!-- 基础信息 -->
+  <view class="test-section">
+    <text class="section-title">基础信息</text>
+    <view class="info-card">
+      <text class="info-item">小程序版本: 1.0.0</text>
+      <text class="info-item">开发框架: 微信小程序原生</text>
+      <text class="info-item">UI组件库: TDesign</text>
+      <text class="info-item">语言: TypeScript</text>
+    </view>
+  </view>
+
+  <!-- 页面导航测试 */
+  <view class="test-section">
+    <text class="section-title">页面导航测试</text>
+    <view class="nav-buttons">
+      <t-button 
+        theme="primary" 
+        size="medium" 
+        bind:tap="navigateToHome"
+        class="nav-btn">
+        首页
+      </t-button>
+      <t-button 
+        theme="primary" 
+        variant="outline" 
+        size="medium" 
+        bind:tap="navigateToCreate"
+        class="nav-btn">
+        创作页面
+      </t-button>
+      <t-button 
+        theme="primary" 
+        variant="outline" 
+        size="medium" 
+        bind:tap="navigateToProfile"
+        class="nav-btn">
+        个人中心
+      </t-button>
+    </view>
+  </view>
+
+  <!-- TDesign组件测试 -->
+  <view class="test-section">
+    <text class="section-title">TDesign组件测试</text>
+    
+    <!-- 按钮组件 -->
+    <view class="component-group">
+      <text class="component-title">按钮组件</text>
+      <view class="button-group">
+        <t-button theme="primary" size="small">主要按钮</t-button>
+        <t-button theme="default" size="small">默认按钮</t-button>
+        <t-button theme="danger" size="small">危险按钮</t-button>
+      </view>
+    </view>
+
+    <!-- 标签组件 -->
+    <view class="component-group">
+      <text class="component-title">标签组件</text>
+      <view class="tag-group">
+        <t-tag theme="primary" variant="light">AI创作</t-tag>
+        <t-tag theme="success" variant="light">已发布</t-tag>
+        <t-tag theme="warning" variant="light">草稿</t-tag>
+      </view>
+    </view>
+
+    <!-- 头像组件 -->
+    <view class="component-group">
+      <text class="component-title">头像组件</text>
+      <view class="avatar-group">
+        <t-avatar size="small" image="/assets/images/avatar-default.png"></t-avatar>
+        <t-avatar size="medium" image="/assets/images/avatar-default.png"></t-avatar>
+        <t-avatar size="large" image="/assets/images/avatar-default.png"></t-avatar>
+      </view>
+    </view>
+
+    <!-- 图标组件 -->
+    <view class="component-group">
+      <text class="component-title">图标组件</text>
+      <view class="icon-group">
+        <t-icon name="home" size="24px" color="#667eea"></t-icon>
+        <t-icon name="add-circle" size="24px" color="#52c41a"></t-icon>
+        <t-icon name="user" size="24px" color="#ff4757"></t-icon>
+        <t-icon name="heart" size="24px" color="#ff6b6b"></t-icon>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能测试 -->
+  <view class="test-section">
+    <text class="section-title">功能测试</text>
+    <view class="function-buttons">
+      <t-button 
+        theme="default" 
+        size="medium" 
+        bind:tap="testToast"
+        class="function-btn">
+        测试Toast
+      </t-button>
+      <t-button 
+        theme="default" 
+        size="medium" 
+        bind:tap="testDialog"
+        class="function-btn">
+        测试Dialog
+      </t-button>
+      <t-button 
+        theme="default" 
+        size="medium" 
+        bind:tap="testStorage"
+        class="function-btn">
+        测试存储
+      </t-button>
+    </view>
+  </view>
+
+  <!-- 系统信息 -->
+  <view class="test-section">
+    <text class="section-title">系统信息</text>
+    <view class="system-info">
+      <text class="info-item">设备型号: {{systemInfo.model}}</text>
+      <text class="info-item">系统版本: {{systemInfo.system}}</text>
+      <text class="info-item">微信版本: {{systemInfo.version}}</text>
+      <text class="info-item">屏幕尺寸: {{systemInfo.screenWidth}}x{{systemInfo.screenHeight}}</text>
+    </view>
+  </view>
+
+  <!-- 状态显示 -->
+  <view class="test-section">
+    <text class="section-title">状态显示</text>
+    <view class="status-info">
+      <text class="status-item">登录状态: {{isLoggedIn ? '已登录' : '未登录'}}</text>
+      <text class="status-item">网络状态: {{networkType}}</text>
+      <text class="status-item">当前时间: {{currentTime}}</text>
+    </view>
+  </view>
+</view>
+
+<!-- Toast组件 -->
+<t-toast id="t-toast" />
+
+<!-- Dialog组件 -->
+<t-dialog
+  visible="{{showDialog}}"
+  title="测试对话框"
+  content="这是一个测试对话框，用于验证TDesign组件是否正常工作。"
+  confirm-btn="确定"
+  cancel-btn="取消"
+  bind:confirm="onDialogConfirm"
+  bind:cancel="onDialogCancel"
+/> 

@@ -1,0 +1,263 @@
+/* pages/test/test.wxss */
+
+/* 页面容器 */
+.test-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 40rpx 32rpx;
+}
+
+/* 页面标题 */
+.test-header {
+  text-align: center;
+  margin-bottom: 60rpx;
+  padding: 40rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
+}
+
+.test-title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 16rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.test-subtitle {
+  display: block;
+  font-size: 28rpx;
+  color: #666666;
+  line-height: 1.6;
+}
+
+/* 测试区块 */
+.test-section {
+  margin-bottom: 40rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+.section-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 24rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+/* 信息卡片 */
+.info-card,
+.system-info,
+.status-info {
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  padding: 24rpx;
+}
+
+.info-item,
+.status-item {
+  display: block;
+  font-size: 28rpx;
+  color: #333333;
+  margin-bottom: 12rpx;
+  line-height: 1.5;
+}
+
+.info-item:last-child,
+.status-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 导航按钮 */
+.nav-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.nav-btn {
+  width: 100%;
+  height: 80rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+/* 组件测试区域 */
+.component-group {
+  margin-bottom: 32rpx;
+  padding: 24rpx;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+}
+
+.component-group:last-child {
+  margin-bottom: 0;
+}
+
+.component-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 16rpx;
+}
+
+/* 按钮组 */
+.button-group {
+  display: flex;
+  gap: 16rpx;
+  flex-wrap: wrap;
+}
+
+/* 标签组 */
+.tag-group {
+  display: flex;
+  gap: 12rpx;
+  flex-wrap: wrap;
+}
+
+/* 头像组 */
+.avatar-group {
+  display: flex;
+  gap: 20rpx;
+  align-items: center;
+}
+
+/* 图标组 */
+.icon-group {
+  display: flex;
+  gap: 24rpx;
+  align-items: center;
+}
+
+/* 功能测试按钮 */
+.function-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200rpx, 1fr));
+  gap: 16rpx;
+}
+
+.function-btn {
+  height: 80rpx;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+/* 系统信息样式 */
+.system-info .info-item {
+  position: relative;
+  padding-left: 24rpx;
+}
+
+.system-info .info-item::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #667eea;
+  font-weight: bold;
+}
+
+/* 状态信息样式 */
+.status-info .status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid #e0e0e0;
+}
+
+.status-info .status-item:last-child {
+  border-bottom: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 375px) {
+  .test-container {
+    padding: 32rpx 24rpx;
+  }
+  
+  .test-header {
+    padding: 32rpx;
+  }
+  
+  .test-title {
+    font-size: 40rpx;
+  }
+  
+  .test-section {
+    padding: 24rpx;
+  }
+  
+  .function-buttons {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 动画效果 */
+.test-section {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 悬停效果 */
+.test-section:active {
+  transform: scale(0.98);
+  transition: transform 0.2s ease;
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .test-container {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  }
+  
+  .test-section,
+  .test-header {
+    background: #2a2a2a;
+    border: 1rpx solid #333333;
+  }
+  
+  .test-title {
+    color: #ffffff;
+  }
+  
+  .test-subtitle,
+  .section-title,
+  .component-title {
+    color: #cccccc;
+  }
+  
+  .info-card,
+  .system-info,
+  .status-info,
+  .component-group {
+    background: #333333;
+  }
+  
+  .info-item,
+  .status-item {
+    color: #cccccc;
+  }
+} 

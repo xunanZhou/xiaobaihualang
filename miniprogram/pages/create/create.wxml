@@ -1,0 +1,259 @@
+<!--pages/create/create.wxml-->
+<view class="create-container">
+  <!-- 自定义导航栏 -->
+  <view class="custom-navbar">
+    <view class="navbar-content">
+      <view class="navbar-left" bindtap="onBackTap">
+        <t-icon name="chevron-left" size="40rpx" color="#1a1a1a" />
+      </view>
+      <text class="navbar-title">AI创作</text>
+      <view class="navbar-right">
+        <t-icon name="help-circle" size="40rpx" color="#666666" bindtap="onHelpTap" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 主内容区域 -->
+  <view class="page-content">
+    <!-- 输入区域 -->
+    <view class="input-section card">
+      <view class="section-header">
+        <t-icon name="edit" size="32rpx" color="#667eea" />
+        <text class="section-title">描述你的创意</text>
+      </view>
+      
+      <view class="input-area">
+        <t-textarea
+          value="{{prompt}}"
+          placeholder="请描述你想要创作的画面，例如：一只可爱的小猫在花园里玩耍，水彩画风格"
+          maxlength="{{maxLength}}"
+          auto-height="{{true}}"
+          class="prompt-input"
+          bind:change="onPromptChange"
+          bind:focus="onInputFocus"
+          bind:blur="onInputBlur"
+        />
+        <view class="input-footer">
+          <text class="char-count">{{prompt.length}}/{{maxLength}}</text>
+          <t-button 
+            theme="light" 
+            size="small"
+            bindtap="onClearInput"
+            wx:if="{{prompt.length > 0}}"
+          >
+            清空
+          </t-button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 风格选择 -->
+    <view class="style-section card">
+      <view class="section-header">
+        <t-icon name="palette" size="32rpx" color="#667eea" />
+        <text class="section-title">艺术风格</text>
+      </view>
+      
+      <view class="style-grid">
+        <view 
+          class="style-item {{selectedStyles.includes(item.id) ? 'selected' : ''}}"
+          wx:for="{{artStyles}}" 
+          wx:key="id"
+          bindtap="onStyleTap"
+          data-style="{{item}}"
+        >
+          <view class="style-preview" style="background: {{item.gradient}}">
+            <text class="style-emoji">{{item.emoji}}</text>
+          </view>
+          <text class="style-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 高级设置 -->
+    <view class="advanced-section card" wx:if="{{showAdvanced}}">
+      <view class="section-header">
+        <t-icon name="setting" size="32rpx" color="#667eea" />
+        <text class="section-title">高级设置</text>
+        <t-button 
+          theme="light" 
+          size="small"
+          bindtap="onToggleAdvanced"
+        >
+          收起
+        </t-button>
+      </view>
+      
+      <!-- 负面提示词 -->
+      <view class="setting-item">
+        <text class="setting-label">负面提示词</text>
+        <t-textarea
+          value="{{negativePrompt}}"
+          placeholder="描述不希望出现的元素"
+          maxlength="200"
+          class="negative-input"
+          bind:change="onNegativePromptChange"
+        />
+      </view>
+      
+      <!-- 图片尺寸 -->
+      <view class="setting-item">
+        <text class="setting-label">图片尺寸</text>
+        <view class="size-options">
+          <view 
+            class="size-option {{selectedSize === item.value ? 'selected' : ''}}"
+            wx:for="{{sizeOptions}}" 
+            wx:key="value"
+            bindtap="onSizeSelect"
+            data-size="{{item.value}}"
+          >
+            <text class="size-text">{{item.label}}</text>
+            <text class="size-ratio">{{item.ratio}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 生成质量 -->
+      <view class="setting-item">
+        <text class="setting-label">生成质量</text>
+        <view class="quality-options">
+          <view 
+            class="quality-option {{selectedQuality === item.value ? 'selected' : ''}}"
+            wx:for="{{qualityOptions}}" 
+            wx:key="value"
+            bindtap="onQualitySelect"
+            data-quality="{{item.value}}"
+          >
+            <text class="quality-text">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 展开高级设置按钮 -->
+    <view class="expand-advanced" wx:else>
+      <t-button 
+        theme="light" 
+        size="medium"
+        bindtap="onToggleAdvanced"
+      >
+        <t-icon name="chevron-down" size="24rpx" slot="icon" />
+        高级设置
+      </t-button>
+    </view>
+
+    <!-- 生成结果 -->
+    <view class="result-section card" wx:if="{{generatedImages.length > 0 || isGenerating}}">
+      <view class="section-header">
+        <t-icon name="image" size="32rpx" color="#667eea" />
+        <text class="section-title">生成结果</text>
+        <t-button 
+          theme="light" 
+          size="small"
+          bindtap="onRegenerateTap"
+          wx:if="{{generatedImages.length > 0 && !isGenerating}}"
+        >
+          重新生成
+        </t-button>
+      </view>
+      
+      <!-- 加载状态 -->
+      <view class="loading-state" wx:if="{{isGenerating}}">
+        <view class="loading-animation">
+          <view class="loading-circle"></view>
+          <view class="loading-circle"></view>
+          <view class="loading-circle"></view>
+        </view>
+        <text class="loading-text">AI正在创作中...</text>
+        <view class="progress-bar">
+          <view class="progress-fill" style="width: {{progress}}%"></view>
+        </view>
+        <text class="progress-text">{{progressText}}</text>
+      </view>
+      
+      <!-- 生成的图片 -->
+      <view class="images-grid" wx:else>
+        <view 
+          class="image-item {{selectedImageIndex === index ? 'selected' : ''}}"
+          wx:for="{{generatedImages}}" 
+          wx:key="*this"
+          wx:for-index="index"
+          bindtap="onImageSelect"
+          data-index="{{index}}"
+        >
+          <t-image 
+            src="{{item}}" 
+            mode="aspectFill"
+            class="generated-image"
+            loading="{{true}}"
+            error="{{true}}"
+          />
+          <view class="image-overlay" wx:if="{{selectedImageIndex === index}}">
+            <t-icon name="check-circle-filled" size="48rpx" color="#ffffff" />
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 示例提示词 -->
+    <view class="examples-section card" wx:if="{{!isGenerating && generatedImages.length === 0}}">
+      <view class="section-header">
+        <t-icon name="lightbulb" size="32rpx" color="#ffa726" />
+        <text class="section-title">创作灵感</text>
+      </view>
+      
+      <view class="examples-list">
+        <view 
+          class="example-item"
+          wx:for="{{examplePrompts}}" 
+          wx:key="id"
+          bindtap="onExampleTap"
+          data-prompt="{{item.prompt}}"
+        >
+          <view class="example-icon">{{item.emoji}}</view>
+          <view class="example-content">
+            <text class="example-title">{{item.title}}</text>
+            <text class="example-prompt">{{item.prompt}}</text>
+          </view>
+          <t-icon name="chevron-right" size="32rpx" color="#cccccc" />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions">
+    <t-button 
+      theme="primary" 
+      size="large"
+      class="generate-btn"
+      bindtap="onGenerateTap"
+      disabled="{{isGenerating || prompt.length === 0}}"
+      loading="{{isGenerating}}"
+    >
+      {{isGenerating ? '生成中...' : '开始创作'}}
+    </t-button>
+    
+    <t-button 
+      theme="default" 
+      size="large"
+      class="publish-btn"
+      bindtap="onPublishTap"
+      wx:if="{{generatedImages.length > 0 && !isGenerating}}"
+    >
+      发布作品
+    </t-button>
+  </view>
+</view>
+
+<!-- Toast 提示 -->
+<t-toast id="t-toast" />
+
+<!-- 帮助弹窗 -->
+<t-dialog
+  visible="{{showHelpDialog}}"
+  title="创作小贴士"
+  content="{{helpContent}}"
+  confirm-btn="我知道了"
+  bind:confirm="onHelpConfirm"
+/> 

@@ -6,13 +6,39 @@
     <title>创建图片 - AI画廊</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://tdesign.tencent.com/miniprogram/dist/tdesign.css">
+    <style>
+        .style-tag {
+            transition: all 0.2s ease;
+        }
+        .style-tag:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .style-tag.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        .generate-btn:disabled {
+            background: #e5e7eb;
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 h-screen overflow-hidden">
     <div class="flex flex-col h-full">
         <!-- 顶部标题栏 -->
         <div class="bg-white shadow-sm px-4 py-3 flex items-center">
-            <button class="mr-3 p-1">
-                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button class="mr-3 p-2 rounded-full hover:bg-gray-100 transition-colors">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
             </button>
@@ -22,86 +48,203 @@
         <!-- 主内容区域 -->
         <div class="flex-1 overflow-y-auto p-4">
             <!-- 提示词输入区域 -->
-            <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">描述你想要的图片</label>
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-4">
+                <div class="flex items-center mb-3">
+                    <div class="w-6 h-6 bg-blue-100 rounded-full mr-2 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                        </svg>
+                    </div>
+                    <label class="text-sm font-semibold text-gray-800">描述你想要的图片</label>
+                </div>
                 <textarea 
                     id="prompt-input"
-                    class="w-full h-24 p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    class="w-full h-28 p-4 border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     placeholder="试试描述：主角 + 在哪里 + 做什么 + 像什么风格？&#10;例如：一只可爱的小猫咪在花园里玩耍，阳光明媚，动漫风格"
                 ></textarea>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-xs text-gray-400">建议描述越详细，生成效果越好</span>
+                    <span id="char-count" class="text-xs text-gray-400">0/200</span>
+                </div>
             </div>
 
             <!-- 风格标签 -->
-            <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-3">选择风格</label>
-                <div class="flex flex-wrap gap-2">
-                    <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition-colors" onclick="addStyle('写实')">写实</button>
-                    <button class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm hover:bg-purple-200 transition-colors" onclick="addStyle('动漫')">动漫</button>
-                    <button class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm hover:bg-green-200 transition-colors" onclick="addStyle('电影感')">电影感</button>
-                    <button class="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm hover:bg-pink-200 transition-colors" onclick="addStyle('梦幻')">梦幻</button>
-                    <button class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm hover:bg-yellow-200 transition-colors" onclick="addStyle('水墨画')">水墨画</button>
-                    <button class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm hover:bg-indigo-200 transition-colors" onclick="addStyle('科幻')">科幻</button>
-                    <button class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm hover:bg-red-200 transition-colors" onclick="addStyle('复古')">复古</button>
-                    <button class="px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-sm hover:bg-teal-200 transition-colors" onclick="addStyle('简约')">简约</button>
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-4">
+                <div class="flex items-center mb-4">
+                    <div class="w-6 h-6 bg-purple-100 rounded-full mr-2 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"/>
+                        </svg>
+                    </div>
+                    <label class="text-sm font-semibold text-gray-800">选择艺术风格</label>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <button class="style-tag px-4 py-3 bg-blue-50 text-blue-700 rounded-xl text-sm font-medium" onclick="toggleStyle(this, '写实')">
+                        <div class="text-lg mb-1">🎨</div>
+                        写实
+                    </button>
+                    <button class="style-tag px-4 py-3 bg-purple-50 text-purple-700 rounded-xl text-sm font-medium" onclick="toggleStyle(this, '动漫')">
+                        <div class="text-lg mb-1">🌸</div>
+                        动漫
+                    </button>
+                    <button class="style-tag px-4 py-3 bg-green-50 text-green-700 rounded-xl text-sm font-medium" onclick="toggleStyle(this, '电影感')">
+                        <div class="text-lg mb-1">🎬</div>
+                        电影感
+                    </button>
+                    <button class="style-tag px-4 py-3 bg-pink-50 text-pink-700 rounded-xl text-sm font-medium" onclick="toggleStyle(this, '梦幻')">
+                        <div class="text-lg mb-1">✨</div>
+                        梦幻
+                    </button>
+                    <button class="style-tag px-4 py-3 bg-yellow-50 text-yellow-700 rounded-xl text-sm font-medium" onclick="toggleStyle(this, '水墨画')">
+                        <div class="text-lg mb-1">🖌️</div>
+                        水墨画
+                    </button>
+                    <button class="style-tag px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl text-sm font-medium" onclick="toggleStyle(this, '科幻')">
+                        <div class="text-lg mb-1">🚀</div>
+                        科幻
+                    </button>
+                    <button class="style-tag px-4 py-3 bg-red-50 text-red-700 rounded-xl text-sm font-medium" onclick="toggleStyle(this, '复古')">
+                        <div class="text-lg mb-1">📻</div>
+                        复古
+                    </button>
+                    <button class="style-tag px-4 py-3 bg-teal-50 text-teal-700 rounded-xl text-sm font-medium" onclick="toggleStyle(this, '简约')">
+                        <div class="text-lg mb-1">⚪</div>
+                        简约
+                    </button>
+                    <button class="style-tag px-4 py-3 bg-orange-50 text-orange-700 rounded-xl text-sm font-medium" onclick="toggleStyle(this, '油画')">
+                        <div class="text-lg mb-1">🎭</div>
+                        油画
+                    </button>
                 </div>
             </div>
 
-            <!-- 负面提示词（可选） -->
-            <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">不希望出现的内容（可选）</label>
-                <input 
-                    type="text" 
-                    id="negative-prompt"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="例如：不要文字、不要模糊、不要暗色调"
-                >
+            <!-- 高级设置 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-4">
+                <div class="flex items-center mb-4">
+                    <div class="w-6 h-6 bg-gray-100 rounded-full mr-2 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <label class="text-sm font-semibold text-gray-800">高级设置</label>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-2">不希望出现的内容（可选）</label>
+                        <input 
+                            type="text" 
+                            id="negative-prompt"
+                            class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                            placeholder="例如：不要文字、不要模糊、不要暗色调"
+                        >
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-2">图片尺寸</label>
+                            <select class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option>正方形 (1:1)</option>
+                                <option>横屏 (16:9)</option>
+                                <option>竖屏 (9:16)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-2">生成质量</label>
+                            <select class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option>标准</option>
+                                <option>高清</option>
+                                <option>超高清</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- 生成的图片展示区域 -->
-            <div id="generated-image" class="bg-white rounded-lg shadow-sm p-4 mb-4 hidden">
-                <h3 class="text-sm font-medium text-gray-700 mb-3">生成的图片</h3>
-                <div class="w-full h-64 bg-gradient-to-br from-purple-400 to-pink-400 rounded-lg mb-3 flex items-center justify-center">
+            <div id="generated-image" class="bg-white rounded-xl shadow-sm p-6 mb-4 hidden">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">生成结果</h3>
+                <div class="w-full h-64 bg-gradient-to-br from-purple-400 to-pink-400 rounded-xl mb-4 flex items-center justify-center">
                     <span class="text-white text-lg font-semibold">AI生成的图片</span>
                 </div>
-                <div class="flex justify-between">
-                    <button id="regenerate-btn" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors">
+                <div class="flex gap-3">
+                    <button id="regenerate-btn" class="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-colors">
+                        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
                         重新生成
                     </button>
-                    <button id="publish-btn" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
-                        发布
+                    <button id="publish-btn" class="flex-1 px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-medium transition-colors">
+                        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                        </svg>
+                        发布作品
                     </button>
                 </div>
             </div>
 
             <!-- 生成按钮 -->
-            <button id="generate-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-medium transition-colors">
-                生成图片
+            <button id="generate-btn" class="generate-btn w-full text-white py-4 rounded-xl font-semibold text-lg">
+                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                开始AI创作
             </button>
 
             <!-- 加载状态 -->
-            <div id="loading" class="hidden bg-white rounded-lg shadow-sm p-8 mb-4">
+            <div id="loading" class="hidden bg-white rounded-xl shadow-sm p-8 mb-4">
                 <div class="flex flex-col items-center">
-                    <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                    <p class="text-gray-600">AI正在为您创作中...</p>
-                    <p class="text-sm text-gray-400 mt-1">预计需要10-30秒</p>
+                    <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">AI正在为您创作中...</h3>
+                    <p class="text-gray-500 text-center mb-4">请稍候，这通常需要10-30秒</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-500 h-2 rounded-full animate-pulse" style="width: 45%"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- 灵感示例 -->
-            <div class="bg-white rounded-lg shadow-sm p-4 mt-4">
-                <h3 class="text-sm font-medium text-gray-700 mb-3">💡 创作灵感</h3>
-                <div class="space-y-2">
-                    <div class="p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors" onclick="useExample('一只橘色的小猫咪在樱花树下打盹，春日午后，温暖的阳光，日系插画风格')">
-                        <p class="text-sm text-gray-700">一只橘色的小猫咪在樱花树下打盹，春日午后，温暖的阳光，日系插画风格</p>
+            <div class="bg-white rounded-xl shadow-sm p-6 mt-4">
+                <div class="flex items-center mb-4">
+                    <div class="w-6 h-6 bg-yellow-100 rounded-full mr-2 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
                     </div>
-                    <div class="p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors" onclick="useExample('未来城市的夜景，霓虹灯闪烁，飞行汽车穿梭，赛博朋克风格，高清细节')">
-                        <p class="text-sm text-gray-700">未来城市的夜景，霓虹灯闪烁，飞行汽车穿梭，赛博朋克风格，高清细节</p>
+                    <h3 class="text-sm font-semibold text-gray-800">💡 创作灵感</h3>
+                </div>
+                <div class="space-y-3">
+                    <div class="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl cursor-pointer hover:shadow-md transition-all" onclick="useExample('一只橘色的小猫咪在樱花树下打盹，春日午后，温暖的阳光，日系插画风格')">
+                        <div class="flex items-start">
+                            <div class="text-2xl mr-3">🐱</div>
+                            <div>
+                                <p class="text-sm text-gray-700 font-medium mb-1">可爱动物系列</p>
+                                <p class="text-xs text-gray-500">一只橘色的小猫咪在樱花树下打盹，春日午后，温暖的阳光，日系插画风格</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors" onclick="useExample('古代中国山水画，云雾缭绕的山峰，小桥流水，水墨画风格，意境深远')">
-                        <p class="text-sm text-gray-700">古代中国山水画，云雾缭绕的山峰，小桥流水，水墨画风格，意境深远</p>
+                    <div class="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl cursor-pointer hover:shadow-md transition-all" onclick="useExample('未来城市的夜景，霓虹灯闪烁，飞行汽车穿梭，赛博朋克风格，高清细节')">
+                        <div class="flex items-start">
+                            <div class="text-2xl mr-3">🌃</div>
+                            <div>
+                                <p class="text-sm text-gray-700 font-medium mb-1">科幻未来系列</p>
+                                <p class="text-xs text-gray-500">未来城市的夜景，霓虹灯闪烁，飞行汽车穿梭，赛博朋克风格，高清细节</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-gradient-to-r from-green-50 to-teal-50 rounded-xl cursor-pointer hover:shadow-md transition-all" onclick="useExample('古代中国山水画，云雾缭绕的山峰，小桥流水，水墨画风格，意境深远')">
+                        <div class="flex items-start">
+                            <div class="text-2xl mr-3">🏔️</div>
+                            <div>
+                                <p class="text-sm text-gray-700 font-medium mb-1">中国风系列</p>
+                                <p class="text-xs text-gray-500">古代中国山水画，云雾缭绕的山峰，小桥流水，水墨画风格，意境深远</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+            
+            <!-- 底部间距 -->
+            <div class="h-20"></div>
         </div>
     </div>
 
@@ -112,20 +255,60 @@
         const generatedImage = document.getElementById('generated-image');
         const publishBtn = document.getElementById('publish-btn');
         const regenerateBtn = document.getElementById('regenerate-btn');
+        const charCount = document.getElementById('char-count');
 
-        // 添加风格到提示词
-        function addStyle(style) {
-            const currentText = promptInput.value;
-            if (currentText && !currentText.includes(style)) {
-                promptInput.value = currentText + '，' + style + '风格';
-            } else if (!currentText) {
-                promptInput.value = style + '风格';
+        let selectedStyles = [];
+
+        // 字符计数
+        promptInput.addEventListener('input', function() {
+            const count = this.value.length;
+            charCount.textContent = `${count}/200`;
+            if (count > 200) {
+                charCount.classList.add('text-red-500');
+            } else {
+                charCount.classList.remove('text-red-500');
             }
+        });
+
+        // 切换风格标签
+        function toggleStyle(element, style) {
+            if (element.classList.contains('active')) {
+                element.classList.remove('active');
+                selectedStyles = selectedStyles.filter(s => s !== style);
+            } else {
+                element.classList.add('active');
+                selectedStyles.push(style);
+            }
+            updatePromptWithStyles();
+        }
+
+        // 更新提示词中的风格
+        function updatePromptWithStyles() {
+            let currentText = promptInput.value;
+            // 移除之前的风格标签
+            currentText = currentText.replace(/，[^，]*风格/g, '');
+            
+            if (selectedStyles.length > 0) {
+                const styleText = selectedStyles.join('、') + '风格';
+                if (currentText && !currentText.endsWith('，')) {
+                    currentText += '，' + styleText;
+                } else if (currentText) {
+                    currentText += styleText;
+                } else {
+                    currentText = styleText;
+                }
+            }
+            promptInput.value = currentText;
+            
+            // 更新字符计数
+            const count = currentText.length;
+            charCount.textContent = `${count}/200`;
         }
 
         // 使用示例提示词
         function useExample(example) {
             promptInput.value = example;
+            promptInput.dispatchEvent(new Event('input'));
         }
 
         // 生成图片
@@ -156,7 +339,7 @@
                 ];
                 const randomColor = colors[Math.floor(Math.random() * colors.length)];
                 const imageDiv = generatedImage.querySelector('.bg-gradient-to-br');
-                imageDiv.className = `w-full h-64 bg-gradient-to-br ${randomColor} rounded-lg mb-3 flex items-center justify-center`;
+                imageDiv.className = `w-full h-64 bg-gradient-to-br ${randomColor} rounded-xl mb-4 flex items-center justify-center`;
             }, 3000);
         });
 
@@ -169,7 +352,7 @@
         // 发布图片
         publishBtn.addEventListener('click', function() {
             // 模拟发布过程
-            publishBtn.textContent = '发布中...';
+            publishBtn.innerHTML = '<svg class="w-4 h-4 inline mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>发布中...';
             publishBtn.disabled = true;
             
             setTimeout(() => {

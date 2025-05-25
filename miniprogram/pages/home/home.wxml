@@ -1,0 +1,103 @@
+<!--pages/home/home.wxml-->
+<view class="home-container">
+  <!-- 自定义导航栏 -->
+  <view class="custom-navbar">
+    <view class="navbar-content">
+      <text class="navbar-title">AI画廊</text>
+      <view class="navbar-search" bindtap="onSearchTap">
+        <t-icon name="search" size="40rpx" color="#666666" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 主内容区域 -->
+  <view class="page-content">
+    <!-- 作品瀑布流 -->
+    <view class="artworks-container">
+      <view class="masonry">
+        <view 
+          class="masonry-item artwork-card fade-in" 
+          wx:for="{{artworks}}" 
+          wx:key="id"
+          bindtap="onArtworkTap"
+          data-artwork="{{item}}"
+        >
+          <view class="artwork-image-container">
+            <t-image 
+              src="{{item.imageUrl}}" 
+              mode="aspectFill"
+              class="artwork-image"
+              loading="{{true}}"
+              error="{{true}}"
+              lazy="{{true}}"
+            />
+            <view class="artwork-likes">
+              <t-icon name="heart-filled" size="24rpx" color="#ff4757" />
+              <text class="likes-count">{{item.likes}}</text>
+            </view>
+          </view>
+          
+          <view class="artwork-info">
+            <text class="artwork-prompt">{{item.prompt}}</text>
+            <view class="artwork-meta">
+              <view class="author-info">
+                <t-avatar 
+                  size="small" 
+                  image="{{item.avatar}}" 
+                  class="author-avatar"
+                />
+                <text class="author-name">{{item.author}}</text>
+              </view>
+              <text class="create-time">{{item.timeAgo}}</text>
+            </view>
+            
+            <!-- 风格标签 -->
+            <view class="style-tags" wx:if="{{item.styles && item.styles.length > 0}}">
+              <t-tag 
+                wx:for="{{item.styles}}" 
+                wx:for-item="style" 
+                wx:key="*this"
+                size="small" 
+                variant="light"
+                class="style-tag"
+              >
+                {{style}}
+              </t-tag>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="loading-more" wx:if="{{loading}}">
+      <t-loading theme="circular" size="40rpx" />
+      <text class="loading-text">加载更多精彩作品...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{artworks.length === 0 && !loading}}">
+      <view class="empty-icon">🎨</view>
+      <text class="empty-title">暂无作品</text>
+      <text class="empty-desc">快去创作第一个AI画作吧！</text>
+      <t-button 
+        theme="primary" 
+        size="medium"
+        class="create-btn"
+        bindtap="onCreateTap"
+      >
+        开始创作
+      </t-button>
+    </view>
+  </view>
+
+  <!-- 悬浮创建按钮 -->
+  <t-fab 
+    icon="add" 
+    class="fab-create"
+    bindtap="onCreateTap"
+  />
+</view>
+
+<!-- Toast 提示 -->
+<t-toast id="t-toast" /> 

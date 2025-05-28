@@ -4,9 +4,6 @@
   <view class="custom-navbar">
     <view class="navbar-content">
       <text class="navbar-title">AI画廊</text>
-      <view class="navbar-search" bindtap="onSearchTap">
-        <t-icon name="search" size="40rpx" color="#666666" />
-      </view>
     </view>
   </view>
 
@@ -23,46 +20,25 @@
           data-artwork="{{item}}"
         >
           <view class="artwork-image-container">
-            <t-image 
+            <image 
               src="{{item.imageUrl}}" 
-              mode="aspectFill"
+              mode="widthFix"
               class="artwork-image"
-              loading="{{true}}"
-              error="{{true}}"
-              lazy="{{true}}"
+              lazy-load="{{true}}"
             />
-            <view class="artwork-likes">
-              <t-icon name="heart-filled" size="24rpx" color="#ff4757" />
-              <text class="likes-count">{{item.likes}}</text>
-            </view>
           </view>
           
           <view class="artwork-info">
-            <text class="artwork-prompt">{{item.prompt}}</text>
+            <text class="artwork-title">{{item.prompt}}</text>
             <view class="artwork-meta">
               <view class="author-info">
-                <t-avatar 
-                  size="small" 
-                  image="{{item.avatar}}" 
+                <image 
+                  src="{{item.avatar}}" 
                   class="author-avatar"
                 />
                 <text class="author-name">{{item.author}}</text>
               </view>
               <text class="create-time">{{item.timeAgo}}</text>
-            </view>
-            
-            <!-- 风格标签 -->
-            <view class="style-tags" wx:if="{{item.styles && item.styles.length > 0}}">
-              <t-tag 
-                wx:for="{{item.styles}}" 
-                wx:for-item="style" 
-                wx:key="*this"
-                size="small" 
-                variant="light"
-                class="style-tag"
-              >
-                {{style}}
-              </t-tag>
             </view>
           </view>
         </view>
@@ -71,7 +47,6 @@
 
     <!-- 加载更多 -->
     <view class="loading-more" wx:if="{{loading}}">
-      <t-loading theme="circular" size="40rpx" />
       <text class="loading-text">加载更多精彩作品...</text>
     </view>
 
@@ -80,23 +55,16 @@
       <view class="empty-icon">🎨</view>
       <text class="empty-title">暂无作品</text>
       <text class="empty-desc">快去创作第一个AI画作吧！</text>
-      <t-button 
-        theme="primary" 
-        size="medium"
-        class="create-btn"
-        bindtap="onCreateTap"
-      >
+      <view class="create-btn" bindtap="onCreateTap">
         开始创作
-      </t-button>
+      </view>
     </view>
   </view>
 
   <!-- 悬浮创建按钮 -->
-  <t-fab 
-    icon="add" 
-    class="fab-create"
-    bindtap="onCreateTap"
-  />
+  <view class="fab-create" bindtap="onCreateTap">
+    <text class="fab-icon">+</text>
+  </view>
 </view>
 
 <!-- Toast 提示 -->

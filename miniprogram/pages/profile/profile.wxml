@@ -4,9 +4,6 @@
   <view class="custom-navbar">
     <view class="navbar-content">
       <text class="navbar-title">我的</text>
-      <view class="navbar-settings" bindtap="onSettingsTap" wx:if="{{isLoggedIn}}">
-        <t-icon name="setting" size="40rpx" color="#666666" />
-      </view>
     </view>
   </view>
 
@@ -17,21 +14,15 @@
       <!-- 欢迎区域 -->
       <view class="welcome-card card">
         <view class="welcome-content">
-          <view class="welcome-icon float-animation">
+          <view class="welcome-icon">
             <text class="icon-text">🎨</text>
           </view>
-          <text class="welcome-title gradient-text">欢迎来到AI画廊</text>
+          <text class="welcome-title">欢迎来到AI画廊</text>
           <text class="welcome-desc">发现无限创意可能\n用AI创作属于你的艺术作品</text>
           
-          <t-button 
-            theme="primary" 
-            size="large"
-            class="login-btn"
-            bindtap="onLoginTap"
-          >
-            <t-icon name="wechat" size="32rpx" slot="icon" />
+          <view class="login-btn" bindtap="onLoginTap">
             微信一键登录
-          </t-button>
+          </view>
           
           <text class="login-tips">登录即表示同意《用户协议》和《隐私政策》</text>
         </view>
@@ -40,78 +31,17 @@
       <!-- 功能介绍 -->
       <view class="features-card card">
         <view class="card-header">
-          <t-icon name="lightning" size="32rpx" color="#0052d9" />
           <text class="card-title">登录后可享受</text>
         </view>
         
-        <t-grid column="{{2}}" class="features-grid">
-          <t-grid-item 
-            wx:for="{{features}}" 
-            wx:key="id"
-            class="feature-item"
-            bindtap="onFeatureTap"
-            data-feature="{{item}}"
-          >
+        <view class="features-grid">
+          <view class="feature-item" wx:for="{{features}}" wx:key="id">
             <view class="feature-content">
-              <view class="feature-icon" style="background: {{item.bgColor}}">
+              <view class="feature-icon">
                 <text class="feature-emoji">{{item.icon}}</text>
               </view>
               <text class="feature-title">{{item.title}}</text>
               <text class="feature-desc">{{item.desc}}</text>
-            </view>
-          </t-grid-item>
-        </t-grid>
-      </view>
-
-      <!-- 热门作品预览 -->
-      <view class="preview-card card">
-        <view class="card-header">
-          <t-icon name="heart-filled" size="32rpx" color="#ff4757" />
-          <text class="card-title">热门作品</text>
-        </view>
-        
-        <view class="preview-grid">
-          <view 
-            class="preview-item" 
-            wx:for="{{previewArtworks}}" 
-            wx:key="id"
-            bindtap="onPreviewTap"
-          >
-            <view class="preview-placeholder" style="background: {{item.color}}">
-              <text class="preview-text">{{item.title}}</text>
-            </view>
-          </view>
-        </view>
-        
-        <view class="preview-footer">
-          <text class="preview-tip">登录查看更多精彩作品</text>
-          <t-button 
-            theme="light" 
-            size="small"
-            bindtap="onLoginTap"
-          >
-            立即体验 →
-          </t-button>
-        </view>
-      </view>
-
-      <!-- 创作灵感 -->
-      <view class="inspiration-card card">
-        <view class="card-header">
-          <t-icon name="lightbulb" size="32rpx" color="#ffa726" />
-          <text class="card-title">创作灵感</text>
-        </view>
-        
-        <view class="inspiration-list">
-          <view 
-            class="inspiration-item" 
-            wx:for="{{inspirations}}" 
-            wx:key="id"
-          >
-            <view class="inspiration-icon">{{item.emoji}}</view>
-            <view class="inspiration-content">
-              <text class="inspiration-title">{{item.title}}</text>
-              <text class="inspiration-desc">{{item.desc}}</text>
             </view>
           </view>
         </view>
@@ -123,9 +53,8 @@
       <!-- 用户信息卡片 -->
       <view class="user-card card">
         <view class="user-info">
-          <t-avatar 
-            size="large" 
-            image="{{userInfo.avatarUrl}}" 
+          <image 
+            src="{{userInfo.avatarUrl}}" 
             class="user-avatar"
           />
           <view class="user-details">
@@ -149,98 +78,44 @@
             <text class="stat-label">天</text>
           </view>
         </view>
-        
-        <!-- 成就徽章 -->
-        <view class="achievements" wx:if="{{achievements.length > 0}}">
-          <t-tag 
-            wx:for="{{achievements}}" 
-            wx:key="*this"
-            size="small" 
-            variant="light"
-            theme="{{item.theme}}"
-            class="achievement-tag"
-          >
-            {{item.name}}
-          </t-tag>
-        </view>
       </view>
 
       <!-- 快捷操作 -->
       <view class="actions-card card">
-        <t-grid column="{{4}}" class="actions-grid">
-          <t-grid-item 
-            wx:for="{{quickActions}}" 
-            wx:key="id"
-            class="action-item"
-            bindtap="onActionTap"
-            data-action="{{item}}"
-          >
+        <view class="actions-grid">
+          <view class="action-item" wx:for="{{quickActions}}" wx:key="id" bindtap="onActionTap" data-action="{{item}}">
             <view class="action-content">
-              <view class="action-icon" style="background: {{item.bgColor}}">
-                <t-icon name="{{item.icon}}" size="40rpx" color="{{item.iconColor}}" />
+              <view class="action-icon">
+                <text class="action-emoji">{{item.icon}}</text>
               </view>
               <text class="action-label">{{item.label}}</text>
             </view>
-          </t-grid-item>
-        </t-grid>
+          </view>
+        </view>
       </view>
 
       <!-- 个人画廊 -->
       <view class="gallery-card card">
         <view class="card-header">
           <text class="card-title">个人画廊</text>
-          <t-button 
-            theme="light" 
-            size="small"
-            bindtap="onViewAllTap"
-            wx:if="{{userArtworks.length > 4}}"
-          >
-            查看全部
-          </t-button>
         </view>
         
-        <!-- 作品网格 -->
         <view class="gallery-grid" wx:if="{{userArtworks.length > 0}}">
-          <view 
-            class="gallery-item" 
-            wx:for="{{displayArtworks}}" 
-            wx:key="id"
-            bindtap="onArtworkTap"
-            data-artwork="{{item}}"
-          >
-            <t-image 
-              src="{{item.imageUrl}}" 
-              mode="aspectFill"
-              class="gallery-image"
-              loading="{{true}}"
-              error="{{true}}"
-            />
+          <view class="gallery-item" wx:for="{{userArtworks}}" wx:key="id" bindtap="onArtworkTap" data-artwork="{{item}}">
+            <image src="{{item.imageUrl}}" class="gallery-image" mode="aspectFill" />
             <view class="gallery-info">
               <text class="gallery-title">{{item.prompt}}</text>
-              <view class="gallery-meta">
-                <text class="gallery-date">{{item.timeAgo}}</text>
-                <view class="gallery-likes">
-                  <t-icon name="heart-filled" size="20rpx" color="#ff4757" />
-                  <text class="likes-count">{{item.likes}}</text>
-                </view>
-              </view>
+              <text class="gallery-time">{{item.timeAgo}}</text>
             </view>
           </view>
         </view>
         
-        <!-- 空状态 -->
-        <view class="gallery-empty" wx:else>
-          <view class="empty-icon">🖼️</view>
-          <text class="empty-title">还没有作品</text>
-          <text class="empty-desc">快去创作你的第一个AI画作吧！</text>
-          <t-button 
-            theme="primary" 
-            size="medium"
-            class="create-btn"
-            bindtap="onCreateTap"
-          >
+        <view class="empty-gallery" wx:else>
+          <text class="empty-text">还没有作品</text>
+          <text class="empty-desc">快去创作第一个AI画作吧！</text>
+          <view class="create-btn" bindtap="onCreateTap">
             开始创作
-          </t-button>
+          </view>
         </view>
       </view>
     </view>

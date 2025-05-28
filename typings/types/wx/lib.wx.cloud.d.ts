@@ -477,7 +477,7 @@ declare namespace DB {
 
     class DatabaseAggregateCommand {}
 
-    enum LOGIC_COMMANDS_LITERAL {
+    enum LOGIC_COMMANDS_LITERAL {   
         AND = 'and',
         OR = 'or',
         NOT = 'not',

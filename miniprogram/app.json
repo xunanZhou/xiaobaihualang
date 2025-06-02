@@ -47,6 +47,11 @@
     "t-input": "tdesign-miniprogram/input/input",
     "t-textarea": "tdesign-miniprogram/textarea/textarea"
   },
+  "permission": {
+    "scope.userInfo": {
+      "desc": "用于完善用户资料和个性化服务"
+    }
+  },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents"

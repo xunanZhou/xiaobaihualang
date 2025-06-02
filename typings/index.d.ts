@@ -8,10 +8,17 @@ interface IAppOption {
     userArtworks: any[]
   }
   userInfoReadyCallback?: WechatMiniprogram.GetUserInfoSuccessCallback,
-  checkLoginStatus(): void,
+
   initSampleData(): void,
+
+  addArtwork(artwork: any): void,
+  getTimeAgo(createTime: string): string,
+
+  // 🔥 云开发相关方法
+  initCloud(): void,
+
+  // 用户相关方法  
+  checkLoginStatus(): void,
   login(userInfo: any): void,
   logout(): void,
-  addArtwork(artwork: any): void,
-  getTimeAgo(createTime: string): string
 }

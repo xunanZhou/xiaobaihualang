@@ -1,5 +1,5 @@
-(function() {
-  const appInstance = getApp<IAppOption>()
+(function() { //??? usage of function() {}
+  const appInstance = getApp<IAppOption>() //??? what's the usage of getApp<IAppOption>()?
 
   interface UserInfo {
     nickName: string
@@ -55,9 +55,22 @@
     emoji: string
   }
 
-  interface ProfileData {
-    isLoggedIn: boolean
-    showLoginDialog: boolean
+  interface ProfileData { //?? What's the usage of interface?
+    isLoggedIn: boolean 
+    showLoginDialog: boolean //??? what's the usage of var_name : boolean? is it the definition of the var?
+    /* ??? t-dialog's usage? it's an element with a property visible="{{showLoginDialog}}", controlled by the state managed in the ProfileData interface, similar usage like state in React?
+        <!-- 登录弹窗 -->
+        <t-dialog 
+        visible="{{showLoginDialog}}"
+        title="微信登录"
+        content="是否使用微信账号登录AI画廊？"
+        confirm-btn="确认登录"
+        cancel-btn="取消"
+        bind:confirm="onConfirmLogin"
+        bind:cancel="onCancelLogin"
+        /> 
+    */    
+    
     userInfo: UserInfo
     userStats: UserStats
     achievements: Achievement[]
@@ -311,7 +324,9 @@
 
     // 登录按钮
     onLoginTap() {
-      this.setData({ showLoginDialog: true })
+      this.setData({ showLoginDialog: true }) 
+      //??looks like set showLoginDialog to true will automatically trigger the login dialog interface?
+      //??
     },
 
     // 确认登录
@@ -327,27 +342,130 @@
 
     // 执行登录
     performLogin() {
-      wx.getUserProfile({
-        desc: '用于完善用户资料',
-        success: (res) => {
-          const userInfo = res.userInfo
-          
-          // 保存用户信息到全局状态
-          appInstance.login(userInfo)
-          
-          this.setData({
-            isLoggedIn: true,
-            userInfo: userInfo
-          })
-          
-          this.loadUserData()
-          this.showToast('登录成功', 'success')
+        console.log("performLogin is called")
+        //step 1: 微信登录凭证
+        wx.getUserProfile({ //
+            desc: '完善用户资料',
+            success: (profileRes) => {
+                // console.log("after calling wx.login()", profileRes) //why I cannot extend loginRes? like ...loginres? 
+                //? wx.login() is a function of wx, which is the global 
+                // object of wechat mini program, and wx is defined in the miniprogram/app.ts
+                // console.log("profileRes.userinfo: ", profileRes.userInfo)
+                if (profileRes.userInfo) {
+                    //step 2: 获取用户信息
+                    wx.login({
+                        desc: '完善用户资料',
+                        success: (loginRes) => {
+                            console.log("get profileres successfully", loginRes)
+                            
+                            // 🔥 获取设备信息
+                            const systemInfo = wx.getSystemInfoSync()
+                            
+                            const deviceInfo = {
+                              platform: systemInfo.platform,        // "ios" | "android" | "windows" | "mac"
+                              version: systemInfo.version,          // 微信版本号
+                              system: systemInfo.system,            // 操作系统版本
+                              model: systemInfo.model,              // 设备型号
+                              brand: systemInfo.brand,              // 设备品牌
+                              SDKVersion: systemInfo.SDKVersion,    // 基础库版本
+                              pixelRatio: systemInfo.pixelRatio,    // 设备像素比
+                              screenWidth: systemInfo.screenWidth,  // 屏幕宽度
+                              screenHeight: systemInfo.screenHeight, // 屏幕高度
+                              language: systemInfo.language,        // 微信设置的语言
+                              fontSizeSetting: systemInfo.fontSizeSetting // 用户字体大小设置
+                            }
+                            
+                            console.log("📱 设备信息:", deviceInfo)
+
+                            this.callLoginCloudFunction(loginRes.code, profileRes.userInfo, deviceInfo) 
+
+                        },
+                        fail: (loginRes) => {
+                          console.error("❌ 获取用户信息失败！", loginRes)
+                          if (loginRes.errMsg && loginRes.errMsg.includes('deny')) {
+                            // 用户拒绝授权
+                            wx.showModal({
+                              title: '授权提示',
+                              content: '需要获取您的基本信息才能正常使用登录功能，请允许授权',
+                              confirmText: '重新授权',
+                              cancelText: '暂不登录',
+                              success: (modalRes) => {
+                                if (modalRes.confirm) {
+                                  // 用户选择重新授权，递归调用登录
+                                  this.performLogin()
+                                } else {
+                                  // 用户选择不登录
+                                  this.showToast('已取消登录', 'info')
+                                }
+                              }
+                            })
+                          } else {
+                            // 其他错误
+                            this.showToast('获取用户信息失败，请重试', 'error')
+                          }
+                        }
+                    })
+                }
+            }
+        })
+    },
+
+  callLoginCloudFunction(code: string, userInfo: any, deviceInfo: any) {
+      console.log("callLoginCloudFunction is called")
+      console.log("code: ", code)
+      console.log("userInfo: ", userInfo)
+
+      // 显示登录加载提示
+      wx.showLoading({
+        title: '登录中...',
+        mask: true
+      })
+
+      // 💡 wx.cloud.callFunction() 是微信小程序云开发提供的API
+      // 用于调用云函数，这里调用名为'userLogin'的云函数
+      wx.cloud.callFunction({
+        name: 'userLogin',  // 🎯 云函数名称，必须与cloudfunctions目录下的文件夹名一致
+        data: {             // 📤 传递给云函数的数据
+          code: code,       // 微信登录凭证，用于在服务端获取openid
+          userInfo: userInfo, // 用户基本信息(昵称、头像等)
+          deviceInfo: deviceInfo
         },
-        fail: () => {
+        success: (res: any) => {
+          console.log("callLoginCloudFunction success", res)
+          wx.hideLoading() //需要隐藏loading吗?
+          console.log("获得云函数返回结果", res)
+          if (res.result.success) {
+            // ✅ 登录成功处理
+            console.log("✅ 登录成功！")
+            const userData = res.result.data
+
+            //保存数据到全局
+            const app = getApp<IAppOption>() //保存数据到全局是什么用法?
+            app.login(userData)
+
+            //更新页面状态
+            this.setData({
+              isLoggedIn: true,
+              userInfo: userData,
+              showLoginDialog: false
+            })
+
+            this.loadUserData()
+            this.showToast('登录成功', 'success')
+          } else {
+            //❌ 登录失败处理
+            console.error("❌ 登录失败！")
+            this.showToast('登录失败，请重试', 'error')
+          }
+        },
+        fail: (err: any) => {
+          wx.hideLoading() //需要隐藏loading吗?
+          console.error("❌ 云函数调用失败！", err)
           this.showToast('登录失败，请重试', 'error')
         }
       })
-    },
+  },
+
 
     // 设置按钮
     onSettingsTap() {

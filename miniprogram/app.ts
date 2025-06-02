@@ -13,6 +13,9 @@ App<IAppOption>({
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
 
+    // 🔥 Step 1: 初始化云开发环境
+    this.initCloud()
+
     // 检查登录状态
     this.checkLoginStatus()
 
@@ -20,13 +23,48 @@ App<IAppOption>({
     this.initSampleData()
 
     // 登录
-    wx.login({
+    wx.login({ //??? where does wx come from? wx.login will return a code, which is a string?
       success: res => {
         console.log(res.code)
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       },
     })
   },
+
+   /**
+   * 🔥 新增方法：初始化云开发环境
+   * 
+   * 作用：连接到腾讯云，让小程序可以使用云函数和云数据库
+   */
+   initCloud() {
+    // 检查是否支持云开发
+    if (!wx.cloud) {
+      console.error('请使用 2.2.3 或以上的基础库以使用云能力')
+      return
+    }
+
+    // 初始化云开发环境
+    wx.cloud.init({
+      env: 'cloud1-1gj4027297324556',  // 🚨 重要：替换为你的云环境ID
+      traceUser: true      // 用于在控制台中查看调用日志
+    })
+    
+    console.log('云开发环境初始化成功')
+  },
+
+  // 🔥 更新登录方法，支持云函数返回的用户数据
+  login(userData: any) {
+    console.log('用户登录，数据：', userData)
+    
+    this.globalData.userInfo = userData
+    this.globalData.isLoggedIn = true
+    
+    // 保存到本地存储
+    wx.setStorageSync('userInfo', userData)
+    wx.setStorageSync('userId', userData.userId)  // 保存用户ID
+    wx.setStorageSync('openid', userData.openid)  // 保存openid
+  },
+
 
   // 检查登录状态
   checkLoginStatus() {
@@ -35,13 +73,6 @@ App<IAppOption>({
       this.globalData.userInfo = userInfo
       this.globalData.isLoggedIn = true
     }
-  },
-
-  // 用户登录
-  login(userInfo: any) {
-    this.globalData.userInfo = userInfo
-    this.globalData.isLoggedIn = true
-    wx.setStorageSync('userInfo', userInfo)
   },
 
   // 用户登出

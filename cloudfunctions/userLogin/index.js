@@ -161,15 +161,34 @@ exports.main = async (event, context) => {
                     //TODO 更新头像和nickname             
                 }
 
-            // 如果提供了新的用户信息，也一并更新
+             // 🔥 智能更新用户信息
             if (userInfo) {
-                    if (userInfo.nickName) {
+                // 昵称可以随时更新
+                if (userInfo.nickName) {
                     updateData.nickName = userInfo.nickName
-                    }
-                    if (userInfo.avatarUrl) {
-                    updateData.avatarUrl = userInfo.avatarUrl
+                }
+                
+                // 🎯 头像更新的智能逻辑
+                if (userInfo.avatarUrl) {
+                    const currentAvatar = existingUser.avatarUrl
+                    
+                    // 判断当前头像是否为自定义头像（云存储URL）
+                    const isCustomAvatar = currentAvatar && currentAvatar.startsWith('cloud://')
+                    
+                    console.log('🖼️ 头像更新检查:')
+                    console.log('  - 当前头像:', currentAvatar)
+                    console.log('  - 新头像:', userInfo.avatarUrl)
+                    console.log('  - 是否自定义头像:', isCustomAvatar)
+                    
+                    if (!isCustomAvatar) {
+                        // 只有在没有自定义头像时才更新为微信头像
+                        updateData.avatarUrl = userInfo.avatarUrl
+                        console.log('  - ✅ 使用微信默认头像')
+                    } else {
+                        console.log('  - 🛡️ 保护自定义头像，不覆盖')
                     }
                 }
+            }
 
             // 执行更新操作
             await usersCollection.doc(userId).update({
@@ -276,7 +295,8 @@ exports.main = async (event, context) => {
                     userId: responseData.userId,
                     openid: responseData.openid,
                     nickName: responseData.nickName,
-                    isNewUser: responseData.isNewUser
+                    isNewUser: responseData.isNewUser,
+                    avatarUrl: responseData.avatarUrl
                   })
 
                    // 📤 返回成功结果给小程序端

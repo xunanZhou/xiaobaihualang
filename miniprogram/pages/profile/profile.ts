@@ -447,7 +447,7 @@
               this.setData({
                 isLoggedIn: true,
                 userInfo: userData,
-                showLoginDialog: false
+                showLoginDialog: false,
               })
 
               this.loadUserData()

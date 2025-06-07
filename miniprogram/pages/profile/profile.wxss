@@ -77,6 +77,22 @@
   display: block;
 }
 
+/* 添加测试按钮样式 */
+.test-avatar-section {
+  text-align: center;
+  margin: 16rpx 0;
+  padding: 16rpx 0;
+  border-top: 1rpx solid #f0f0f0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.test-avatar-btn {
+  background: #0052d9;
+  color: #ffffff;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+}
+
 /* 功能介绍 */
 .features-grid {
   display: grid;

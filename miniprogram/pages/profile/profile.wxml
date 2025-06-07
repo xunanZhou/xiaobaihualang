@@ -61,6 +61,17 @@
             <text class="user-name">{{userInfo.nickName}}</text>
             <text class="user-role">AI艺术创作者</text>
           </view>
+
+          <!-- 🔥 添加极简测试按钮 -->
+          <view class="test-avatar-section">
+            <button 
+              class="test-avatar-btn" 
+              bindtap="onChangeAvatar"
+              size="mini"
+            >
+              修改用户头像
+            </button>
+          </view>
         </view>
         
         <!-- 统计数据 -->

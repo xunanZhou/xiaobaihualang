@@ -336,7 +336,7 @@
     },
 
     // 取消登录
-    onCancelLogin() {
+    onCancelLogin() { 
       this.setData({ showLoginDialog: false })
     },
 
@@ -410,62 +410,182 @@
         })
     },
 
-  callLoginCloudFunction(code: string, userInfo: any, deviceInfo: any) {
-      console.log("callLoginCloudFunction is called")
-      console.log("code: ", code)
-      console.log("userInfo: ", userInfo)
+    callLoginCloudFunction(code: string, userInfo: any, deviceInfo: any) {
+        console.log("callLoginCloudFunction is called")
+        console.log("code: ", code)
+        console.log("userInfo: ", userInfo)
 
-      // 显示登录加载提示
+        // 显示登录加载提示
+        wx.showLoading({
+          title: '登录中...',
+          mask: true
+        })
+
+        // 💡 wx.cloud.callFunction() 是微信小程序云开发提供的API
+        // 用于调用云函数，这里调用名为'userLogin'的云函数
+        wx.cloud.callFunction({
+          name: 'userLogin',  // 🎯 云函数名称，必须与cloudfunctions目录下的文件夹名一致
+          data: {             // 📤 传递给云函数的数据
+            code: code,       // 微信登录凭证，用于在服务端获取openid
+            userInfo: userInfo, // 用户基本信息(昵称、头像等)
+            deviceInfo: deviceInfo
+          },
+          success: (res: any) => {
+            console.log("callLoginCloudFunction success", res)
+            wx.hideLoading() //需要隐藏loading吗?
+            console.log("获得云函数返回结果", res)
+            if (res.result.success) {
+              // ✅ 登录成功处理
+              console.log("✅ 登录成功！")
+              const userData = res.result.data
+
+              //保存数据到全局
+              const app = getApp<IAppOption>() //保存数据到全局是什么用法?
+              app.login(userData)
+
+              //更新页面状态
+              this.setData({
+                isLoggedIn: true,
+                userInfo: userData,
+                showLoginDialog: false
+              })
+
+              this.loadUserData()
+              this.showToast('登录成功', 'success')
+            } else {
+              //❌ 登录失败处理
+              console.error("❌ 登录失败！")
+              this.showToast('登录失败，请重试', 'error')
+            }
+          },
+          fail: (err: any) => {
+            wx.hideLoading() //需要隐藏loading吗?
+            console.error("❌ 云函数调用失败！", err)
+            this.showToast('登录失败，请重试', 'error')
+          }
+        })
+    },
+    
+    //修改头像按钮点击
+    //1.onChange (prepare file path) -> 2.upload to cloud storage -> 3. update database and global data
+    onChangeAvatar(){
+      //whether logged in 
+      //TODO call onPerformLogin when is not logged in 
+      if (!this.data.isLoggedIn) {
+        this.showToast('请先登录', 'warning')
+        return
+      }
+      console.log('onChangeAvatar is called')
+
+      //微信自带选择图片能力
+      wx.chooseMedia({
+        count: 1,
+        mediaType: ['image'],
+        sourceType: ['album', 'camera'],
+        camera: 'front',
+        success: (res) => {
+          const tempFilePath = res.tempFiles[0].tempFilePath
+          console.log('📸 选择图片成功:', tempFilePath)
+          
+          this.uploadAvatarToCloud(tempFilePath)
+        },
+        fail: (err) => {
+          console.error('❌ 选择图片失败:', err)
+          this.showToast('选择图片失败', 'error')
+        }
+      })
+    },
+
+    //上传头像到云存储
+    uploadAvatarToCloud(tempFilePath: string) {
+      // const app = getApp<IAppOption>() 
+      // //提问 usage of getApp here？ 答：getApp() 是微信小程序的 API，用于获取全局应用实例。已在
+      const userInfo = appInstance.globalData.userInfo 
+
+      if (!userInfo || !userInfo.userId) { 
+        //问 userinfo doesn't include user id and not saved in global data
+        this.showToast('用户信息获取失败', 'error')
+        return
+      }
+
       wx.showLoading({
-        title: '登录中...',
+        title: '上传中...',
         mask: true
       })
 
-      // 💡 wx.cloud.callFunction() 是微信小程序云开发提供的API
-      // 用于调用云函数，这里调用名为'userLogin'的云函数
+      // 生成唯一文件名
+      console.log("✅ 生成唯一文件名:", userInfo, userInfo.userId)
+      const timestamp = Date.now()
+      const fileName = `avatars/${userInfo.userId}_${timestamp}.jpg`
+      
+      console.log('📤 开始上传到云存储:', fileName)
+      
+      wx.cloud.uploadFile({
+        cloudPath: fileName,
+        filePath: tempFilePath,
+        success: (uploadRes) => {
+          console.log('✅ 云存储上传成功:', uploadRes.fileID)
+          
+          // 调用云函数更新数据库
+          this.updateAvatarInDatabase(uploadRes.fileID)
+        },
+        fail: (err) => {
+          console.error('❌ 云存储上传失败:', err)
+          wx.hideLoading()
+          this.showToast('上传失败，请重试', 'error')
+        }
+      })
+    },
+
+    updateAvatarInDatabase(avatarUrl: string) {
+      console.log('💾 开始更新数据库头像:', avatarUrl)
+  
       wx.cloud.callFunction({
-        name: 'userLogin',  // 🎯 云函数名称，必须与cloudfunctions目录下的文件夹名一致
-        data: {             // 📤 传递给云函数的数据
-          code: code,       // 微信登录凭证，用于在服务端获取openid
-          userInfo: userInfo, // 用户基本信息(昵称、头像等)
-          deviceInfo: deviceInfo
+        name: 'profileUpdate',
+        data: {
+          avatarUrl: avatarUrl
         },
         success: (res: any) => {
-          console.log("callLoginCloudFunction success", res)
-          wx.hideLoading() //需要隐藏loading吗?
-          console.log("获得云函数返回结果", res)
-          if (res.result.success) {
-            // ✅ 登录成功处理
-            console.log("✅ 登录成功！")
-            const userData = res.result.data
+          console.log('✅ 云函数调用成功:', res)
 
-            //保存数据到全局
-            const app = getApp<IAppOption>() //保存数据到全局是什么用法?
-            app.login(userData)
-
-            //更新页面状态
+          if (res.result && res.result.success) { 
+            //提问: res的属性是result还是data? 答：默认是result, 云函数里写返回data, callback里写res.result
+            const updatedData = res.result.data
+            
+            // 更新全局数据
+            const app = getApp<IAppOption>()
+            app.globalData.userInfo = {
+              ...app.globalData.userInfo,
+              avatarUrl: updatedData.avatarUrl
+            }
+            
+            // 更新页面显示
             this.setData({
-              isLoggedIn: true,
-              userInfo: userData,
-              showLoginDialog: false
+              'userInfo.avatarUrl': updatedData.avatarUrl
             })
-
-            this.loadUserData()
-            this.showToast('登录成功', 'success')
+            
+            wx.hideLoading()
+            this.showToast('头像更新成功', 'success')
+            
+            console.log('🎉 完整流程成功！')
+            console.log('📊 测试验证点:')
+            console.log('  ✅ 云存储有图片:', avatarUrl)
+            console.log('  ✅ 数据库已更新:', updatedData)
+            
           } else {
-            //❌ 登录失败处理
-            console.error("❌ 登录失败！")
-            this.showToast('登录失败，请重试', 'error')
+            console.error('❌ 云函数返回失败:', res.result)
+            wx.hideLoading()
+            this.showToast(res.result?.message || '更新失败', 'error')
           }
         },
         fail: (err: any) => {
-          wx.hideLoading() //需要隐藏loading吗?
-          console.error("❌ 云函数调用失败！", err)
-          this.showToast('登录失败，请重试', 'error')
+          console.error('❌ 云函数调用失败:', err)
+          wx.hideLoading()
+          this.showToast('网络错误，更新失败', 'error')
         }
-      })
-  },
 
+      })
+    },
 
     // 设置按钮
     onSettingsTap() {

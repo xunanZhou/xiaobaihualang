@@ -157,7 +157,8 @@ exports.main = async (event, context) => {
             const updateData = {
                     lastLoginTime: new Date(), // 更新最后登录时间
                     loginCount: db.command.inc(1), // 登录次数+1
-                    deviceInfo: deviceInfo                      
+                    deviceInfo: deviceInfo         
+                    //TODO 更新头像和nickname             
                 }
 
             // 如果提供了新的用户信息，也一并更新

@@ -1,7 +1,7 @@
 <!--pages/create/create.wxml-->
-<view class="create-container">
+<view class="create-container" style="--status-bar-height: {{statusBarHeight}}px">
   <!-- 自定义导航栏 -->
-  <view class="custom-navbar">
+  <view class="custom-navbar" style="--status-bar-height: {{statusBarHeight}}px">
     <view class="navbar-content">
       <view class="navbar-left" bindtap="onBackTap">
         <t-icon name="chevron-left" size="40rpx" color="#1a1a1a" />
@@ -47,13 +47,18 @@
       </view>
     </view>
 
+
     <!-- 风格选择 -->
     <view class="style-section card">
       <view class="section-header">
         <t-icon name="palette" size="32rpx" color="#667eea" />
         <text class="section-title">艺术风格</text>
+        <text class="style-hint">选择一种风格</text>
       </view>
       
+      <view style="margin-bottom: 20rpx; padding: 10rpx; background: yellow;">
+        当前选中: {{selectedStyles}}
+      </view>
       <view class="style-grid">
         <view 
           class="style-item {{selectedStyles.includes(item.id) ? 'selected' : ''}}"
@@ -65,7 +70,17 @@
           <view class="style-preview" style="background: {{item.gradient}}">
             <text class="style-emoji">{{item.emoji}}</text>
           </view>
+
           <text class="style-name">{{item.name}}</text>
+
+          <!-- <text class="debug-info" style="font-size: 20rpx; color: red;">
+            ID: {{item.id}} | Selected: {{selectedStyles}} | Include: {{isSelected}}
+          </text> -->
+
+          <view class="style-check" wx:if="{{selectedStyles.includes(item.id)}}">
+            √
+          </view>
+          
         </view>
       </view>
     </view>
@@ -130,17 +145,6 @@
       </view>
     </view>
 
-    <!-- 展开高级设置按钮 -->
-    <view class="expand-advanced" wx:else>
-      <t-button 
-        theme="light" 
-        size="medium"
-        bindtap="onToggleAdvanced"
-      >
-        <t-icon name="chevron-down" size="24rpx" slot="icon" />
-        高级设置
-      </t-button>
-    </view>
 
     <!-- 生成结果 -->
     <view class="result-section card" wx:if="{{generatedImages.length > 0 || isGenerating}}">
@@ -164,22 +168,20 @@
           <view class="loading-circle"></view>
           <view class="loading-circle"></view>
         </view>
-        <text class="loading-text">AI正在创作中...</text>
+        <text class="loading-text">{{progressText}}</text>
         <view class="progress-bar">
           <view class="progress-fill" style="width: {{progress}}%"></view>
         </view>
-        <text class="progress-text">{{progressText}}</text>
+        <text class="progress-percent">{{progress}}%</text>
       </view>
       
       <!-- 生成的图片 -->
       <view class="images-grid" wx:else>
         <view 
-          class="image-item {{selectedImageIndex === index ? 'selected' : ''}}"
+          class="image-item selected"
           wx:for="{{generatedImages}}" 
           wx:key="*this"
           wx:for-index="index"
-          bindtap="onImageSelect"
-          data-index="{{index}}"
         >
           <t-image 
             src="{{item}}" 
@@ -188,14 +190,14 @@
             loading="{{true}}"
             error="{{true}}"
           />
-          <view class="image-overlay" wx:if="{{selectedImageIndex === index}}">
+          <view class="image-overlay">
             <t-icon name="check-circle-filled" size="48rpx" color="#ffffff" />
           </view>
         </view>
       </view>
     </view>
 
-    <!-- 示例提示词 -->
+    <!-- 示例提示词 - 仅在未生成时显示 -->
     <view class="examples-section card" wx:if="{{!isGenerating && generatedImages.length === 0}}">
       <view class="section-header">
         <t-icon name="lightbulb" size="32rpx" color="#ffa726" />
@@ -228,10 +230,10 @@
       size="large"
       class="generate-btn"
       bindtap="onGenerateTap"
-      disabled="{{isGenerating || prompt.length === 0}}"
+      disabled="{{isGenerating || prompt.length === 0 || selectedStyles.length === 0}}"
       loading="{{isGenerating}}"
     >
-      {{isGenerating ? '生成中...' : '开始创作'}}
+      {{isGenerating ? progressText : '生成图片'}}
     </t-button>
     
     <t-button 

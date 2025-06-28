@@ -241,20 +241,99 @@
       this.setData({ prompt: '' })
     },
 
-    // 风格选择
-    onStyleTap(e: WechatMiniprogram.TouchEvent) {
-      const style = e.currentTarget.dataset.style
-      const selectedStyles = [...this.data.selectedStyles]
+    // 老风格选择 - 修复选择逻辑
+    // onStyleTap(e: WechatMiniprogram.TouchEvent) {
+    //   const style = e.currentTarget.dataset.style
+    //   const currentSelected = [...this.data.selectedStyles]
       
-      const index = selectedStyles.indexOf(style.id)
-      if (index > -1) {
-        selectedStyles.splice(index, 1)
-      } else {
-        selectedStyles.push(style.id)
-      }
+    //   console.log('Style tapped:', style.id, 'Current selected:', currentSelected)
       
-      this.setData({ selectedStyles })
+    //   const index = currentSelected.indexOf(style.id)
+    //   if (index > -1) {
+    //     // 如果已选中，则取消选择
+    //     currentSelected.splice(index, 1)
+    //     this.setData({ selectedStyles: currentSelected })
+    //     console.log('Style deselected, new selection:', currentSelected)
+    //   } else {
+    //     // 如果未选中，则设为唯一选择（单选模式）
+    //     this.setData({ selectedStyles: [style.id] })
+    //     console.log('Style selected, new selection:', [style.id])
+    //   }
+    // },
+
+      // 超简单的测试方法
+      onSimpleStyleTap(e: WechatMiniprogram.TouchEvent) {
+        console.log('=== 简单测试开始 ===')
+        
+        const styleId = e.currentTarget.dataset.id
+        console.log('点击ID:', styleId)
+        console.log('当前选中:', this.data.selectedStyles)
+        
+        let newSelected: string[] = []
+        if (this.data.selectedStyles.includes(styleId)) {
+          newSelected = []  // 取消选择
+        } else {
+          newSelected = [styleId]  // 选择
+        }
+        
+        console.log('新选中:', newSelected)
+        
+        this.setData({
+          selectedStyles: newSelected
+        }, () => {
+          console.log('更新后:', this.data.selectedStyles)
+        })
     },
+
+
+      // 风格选择 - 完全重新实现
+      onStyleTap(e: WechatMiniprogram.TouchEvent) {
+        console.log('=== 风格点击事件开始 ===')
+        
+        // 获取点击的风格ID
+        const dataset = e.currentTarget.dataset
+        const styleId = dataset.style?.id //what's style?
+        
+        console.log('1. 点击的风格对象:', dataset.style)
+        console.log('2. 风格ID:', styleId, '类型:', typeof styleId)
+        console.log('3. 当前选中数组:', this.data.selectedStyles, '类型:', typeof this.data.selectedStyles)
+        
+              // 检查数组中每个元素的类型
+        // this.data.selectedStyles.forEach((id, index) => { //this selected styles a global variable, why I have to use this.data？
+        //   console.log(`4. 数组[${index}]:`, id, '类型:', typeof id)
+        // })
+      
+        const isSelected = this.data.selectedStyles.includes(styleId)
+        console.log('5. selected结果:', isSelected)
+
+
+        if (!styleId) {
+          console.error('没有获取到风格ID')
+          return
+        }
+        
+        // 获取当前选中的风格数组
+        let newSelectedStyles = [...this.data.selectedStyles]
+        
+        
+        if (isSelected) {
+          // 如果已选中，则取消选择
+          newSelectedStyles = newSelectedStyles.filter(id => id !== styleId)
+          console.log('取消选择，新数组:', newSelectedStyles)
+        } else {
+          // 如果未选中，则设为唯一选择（单选模式）
+          newSelectedStyles = [styleId]
+          console.log('选择新风格，新数组:', newSelectedStyles)
+        }
+        
+        // 更新数据
+        this.setData({
+          selectedStyles: newSelectedStyles
+        }, () => {
+          console.log('数据更新完成，当前选中:', this.data.selectedStyles)
+          console.log('=== 风格点击事件结束 ===')
+        })
+      },
 
     // 高级设置
     onToggleAdvanced() {
@@ -279,13 +358,20 @@
       this.setData({ prompt })
     },
 
-    // 生成图片
-    onGenerateTap() {
+    // 生成图片 - 完全替换原有方法
+    async onGenerateTap() {
+      // 验证输入
       if (!this.data.prompt.trim()) {
         this.showToast('请输入描述内容', 'warning')
         return
       }
 
+      if (this.data.selectedStyles.length === 0) {
+        this.showToast('请选择一种艺术风格', 'warning')
+        return
+      }
+
+      // 检查登录状态
       if (!appInstance.globalData.isLoggedIn) {
         wx.showModal({
           title: '提示',
@@ -302,75 +388,206 @@
         return
       }
 
-      this.startGeneration()
+      await this.startRealGeneration()
     },
 
-    // 开始生成
-    startGeneration() {
+    // 开始真实生成 - 新增方法
+    async startRealGeneration() {
       this.setData({
         isGenerating: true,
-        progress: 0,
-        progressText: '准备中...',
+        progress: 10,
+        progressText: '正在创建任务...',
         generatedImages: []
       })
 
-      this.simulateGeneration()
+      try {
+        wx.showLoading({
+          title: '创建任务中...',
+          mask: true
+        })
+
+        // 调用云函数创建任务
+        const createResult = await wx.cloud.callFunction({
+          name: 'imageGeneration',
+          data: {
+            name: 'createTask',
+            prompt: this.data.prompt.trim(),
+            style: this.data.selectedStyles[0] // 取第一个选中的风格
+          }
+        })
+
+        wx.hideLoading()
+
+        console.log('Create task result:', createResult)
+
+        if (!createResult.result || !createResult.result.success) {
+          const error = createResult.result?.error || '创建任务失败'
+          throw new Error(error)
+        }
+
+        const { taskId } = createResult.result.data
+        
+        this.setData({
+          progress: 30,
+          progressText: '任务已创建，正在生成中...'
+        })
+
+        // 开始轮询查询结果
+        this.pollTaskResult(taskId)
+
+      } catch (error: any) {
+        wx.hideLoading()
+        console.error('Create task error:', error)
+        this.setData({
+          isGenerating: false,
+          progress: 0,
+          progressText: '准备中...'
+        })
+        this.showToast(`创建失败: ${error.message}`, 'error')
+      }
     },
 
-    // 模拟生成过程
-    simulateGeneration() {
-      const steps = [
-        { progress: 20, text: '分析提示词...' },
-        { progress: 40, text: '构建画面结构...' },
-        { progress: 60, text: '渲染细节...' },
-        { progress: 80, text: '优化色彩...' },
-        { progress: 100, text: '生成完成！' }
-      ]
+    // 轮询任务结果 - 新增方法
+    async pollTaskResult(taskId: string) {
+      let pollCount = 0
+      const maxPolls = 100 // 最大轮询次数 (约5分钟)
+      const pollInterval = 3000 // 轮询间隔3秒
 
-      let currentStep = 0
-      const updateProgress = () => {
-        if (currentStep < steps.length) {
-          const step = steps[currentStep]
+      console.log('🚀 开始轮询任务:', taskId)
+
+
+      const poll = async () => {
+        try {
+          pollCount++
+          
+          // 更新进度显示
+          const progress = Math.min(30 + (pollCount * 2), 90) 
+          const timeSpent = pollCount * 3
           this.setData({
-            progress: step.progress,
-            progressText: step.text
+            progress: progress,
+            progressText: `AI正在创作中... (${timeSpent}秒)`
           })
-          currentStep++
-          setTimeout(updateProgress, 1000)
-        } else {
-          this.completeGeneration()
+
+          console.log(`🔄 轮询尝试 ${pollCount}/${maxPolls}, 任务ID: ${taskId}`)
+
+          const queryResult = await wx.cloud.callFunction({
+            name: 'imageGeneration',
+            data: {
+              name: 'queryTask',
+              taskId: taskId
+            }
+          })
+
+          console.log('📡 云函数返回原始结果:', queryResult)
+          console.log('📡 云函数结果详情:', JSON.stringify(queryResult.result, null, 2))
+
+          if (!queryResult.result || !queryResult.result.success) {
+            const error = queryResult.result?.error || '查询任务失败'
+            console.error('❌ 查询失败:', error)
+            throw new Error(error)
+          }
+
+         // 🎯 优雅的数据提取
+         const responseData = queryResult.result.data
+      
+         // 基础状态
+         const status = responseData.status
+         
+         // 图片相关 - 优先使用 uploadResult 中的 fileID
+         const imageUrl = responseData.uploadResult?.fileID || null
+         
+         // 保存状态 - 有 uploadResult 且成功就认为已保存
+         const saved = !!(responseData.uploadResult?.fileID && responseData.uploadResult?.errMsg === 'uploadFile:ok')
+         
+         // 实际提示词 - 从嵌套结构中提取
+         const actualPrompt = responseData.taskData?.results?.[0]?.actual_prompt || 
+                             responseData.actualPrompt || 
+                             null
+   
+         // 🔍 调试日志
+         console.log('📊 提取的数据:')
+         console.log(`  状态: ${status}`)
+         console.log(`  图片URL: ${imageUrl}`)
+         console.log(`  已保存: ${saved}`)
+         console.log(`  实际提示词: ${actualPrompt?.substring(0, 50)}...`)
+
+          if (status === 'SUCCEEDED') {
+            // 生成成功
+            this.setData({
+              isGenerating: false,
+              progress: 100,
+              progressText: '生成完成！',
+              generatedImages: [imageUrl],
+              selectedImageIndex: 0
+            })
+            
+            const message = saved ? '生成成功！已保存到个人相册' : '生成成功！'
+            this.showToast(message, 'success')
+            
+            // 如果有实际使用的提示词，也可以显示给用户
+            if (actualPrompt && actualPrompt !== this.data.prompt) {
+              console.log('Actual prompt used:', actualPrompt)
+            }
+            return
+          }
+
+          if (status === 'FAILED') {
+            throw new Error('图片生成失败，请检查提示词后重试')
+          }
+
+          if (status === 'CANCELED') {
+            throw new Error('任务已取消')
+          }
+
+          // 检查是否超时
+          if (pollCount >= maxPolls) {
+            this.setData({
+              isGenerating: false,
+              progress: 0,
+              progressText: '准备中...'
+            })
+            
+            wx.showModal({
+              title: '生成时间较长',
+              content: '图片生成需要更多时间，完成后会自动保存到您的个人相册中。您可以稍后在个人主页查看。',
+              showCancel: false,
+              confirmText: '我知道了'
+            })
+            return
+          }
+
+          // 继续轮询
+          if (status === 'PENDING' || status === 'RUNNING') {
+            setTimeout(poll, pollInterval)
+          } else {
+            // 未知状态
+            console.warn('Unknown task status:', status)
+            setTimeout(poll, pollInterval)
+          }
+
+        } catch (error: any) {
+          console.error('Poll task error:', error)
+          this.setData({
+            isGenerating: false,
+            progress: 0,
+            progressText: '准备中...'
+          })
+          this.showToast(`查询失败: ${error.message}`, 'error')
         }
       }
 
-      updateProgress()
+      // 开始轮询
+      setTimeout(poll, pollInterval)
     },
 
-    // 完成生成
-    completeGeneration() {
-      // 生成示例图片URL
-      const generatedImages = [
-        `https://picsum.photos/512/512?random=${Date.now()}`,
-        `https://picsum.photos/512/512?random=${Date.now() + 1}`,
-        `https://picsum.photos/512/512?random=${Date.now() + 2}`
-      ]
-
-      this.setData({
-        isGenerating: false,
-        generatedImages,
-        selectedImageIndex: 0
-      })
-
-      this.showToast('生成成功！', 'success')
-    },
-
-    // 重新生成
+    // 重新生成 - 修改原有方法
     onRegenerateTap() {
       wx.showModal({
         title: '重新生成',
-        content: '确定要重新生成图片吗？',
+        content: '确定要重新生成图片吗？这将消耗一次生成额度。',
         success: (res) => {
           if (res.confirm) {
-            this.startGeneration()
+            this.startRealGeneration()
           }
         }
       })

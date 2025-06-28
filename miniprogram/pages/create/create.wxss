@@ -5,6 +5,7 @@
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   position: relative;
   padding-bottom: 160rpx;
+  --navbar-height: 88rpx;
 }
 
 /* 自定义导航栏 */
@@ -17,6 +18,7 @@
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: var(--status-bar-height, 44px);
 }
 
 .navbar-content {
@@ -24,8 +26,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 20rpx 32rpx;
-  padding-top: calc(20rpx + var(--status-bar-height, 0));
-  height: 88rpx;
+  height: var(--navbar-height);
 }
 
 .navbar-left,
@@ -52,7 +53,7 @@
 
 /* 主内容区域 */
 .page-content {
-  padding-top: calc(88rpx + var(--status-bar-height, 0) + 40rpx);
+  padding-top: calc(var(--navbar-height) + var(--status-bar-height, 44px) + 40rpx);
   padding-bottom: 40rpx;
 }
 
@@ -79,6 +80,13 @@
   color: #1a1a1a;
   margin-left: 16rpx;
   flex: 1;
+}
+
+/* 添加风格提示样式 */
+.style-hint {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: auto;
 }
 
 /* 输入区域 */
@@ -129,9 +137,11 @@
   align-items: center;
   padding: 20rpx;
   border-radius: 16rpx;
-  border: 2rpx solid transparent;
+  border: 2rpx solid #e0e0e0;
   transition: all 0.3s ease;
   cursor: pointer;
+  position: relative;
+  background: #ffffff;
 }
 
 .style-item:active {
@@ -139,8 +149,9 @@
 }
 
 .style-item.selected {
-  border-color: #667eea;
-  background: rgba(102, 126, 234, 0.05);
+  border-color: #ff1818;
+  background: rgba(24, 144, 255, 0.05);
+  box-shadow: 0 2rpx 8rpx rgba(24, 144, 255, 0.15);
 }
 
 .style-preview {
@@ -165,14 +176,47 @@
   text-align: center;
 }
 
-/* 高级设置 */
+/* 勾选标记 - 统一颜色 */
+.style-check {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  width: 32rpx;
+  height: 32rpx;
+  background: #1890ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid #ffffff;
+  box-shadow: 0 2rpx 8rpx rgba(24, 144, 255, 0.3);
+  z-index: 10;
+}
+
+.debug-info {
+  position: absolute;
+  bottom: -40rpx;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background: rgba(255, 0, 0, 0.1);
+  padding: 4rpx;
+}
+
+.check-symbol {
+  color: #ffffff;
+  font-size: 20rpx;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* 隐藏高级设置 */
 .advanced-section {
-  border: 2rpx dashed #e0e0e0;
+  display: none !important;
 }
 
 .expand-advanced {
-  text-align: center;
-  margin: 0 32rpx 32rpx;
+  display: none !important;
 }
 
 .setting-item {
@@ -334,10 +378,19 @@
   color: #666;
 }
 
+/* 添加进度百分比样式 */
+.progress-percent {
+  font-size: 24rpx;
+  color: #667eea;
+  text-align: center;
+  margin-top: 16rpx;
+  font-weight: 500;
+}
+
 /* 图片网格 */
 .images-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 16rpx;
   margin-top: 24rpx;
 }
